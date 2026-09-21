@@ -40,7 +40,7 @@ const IMAGE_POOL = [
   'https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1509319117193-57bab727e09d?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=900&q=80',
-  'photos/backpack2.jpg',
+  'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
 ];
@@ -416,6 +416,7 @@ function moveWishlistToCart(productId) {
     state.wishlist = state.wishlist.filter((id) => id !== productId);
     saveWishlist();
     updateHeaderCounts();
+    refreshAllWishlistButtons();
     renderWishlist();
   }
 }
