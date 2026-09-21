@@ -1,5 +1,5 @@
 /* =============================================================
-   MAISON CUIR — APPLICATION SCRIPT
+   Ginhawá — APPLICATION SCRIPT
    A front-end-only e-commerce app. No backend: everything that
    needs to survive a refresh is saved in localStorage.
 
@@ -28,21 +28,21 @@
 // A pool of real bag/leather-goods photos. Each product picks
 // three of these (by index) to simulate a multi-angle gallery.
 const IMAGE_POOL = [
-  'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1547949003-9792a18a2645?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1524498351468-7a3c2ba32b8b?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80',
+  'photos/tote.jpg',
+  'photos/backpack.jpg',
+  'photos/crossbody.jpg',
+  'photos/satchel.jpg',
+  'photos/clutch.jpg',
+  'photos/duffel.jpg',
+  'photos/hobo.jpg',
   'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1601369447742-1ec1a7a15b16?auto=format&fit=crop&w=900&q=80',
+  'photos/tote.jpg',
   'https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1509319117193-57bab727e09d?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
+  'photos/satchel.jpg',
+  'photos/duffel.jpg',
+  'photos/hobo.jpg',
+  'photos/hobo.jpg',
+  'photos/duffel.jpg',
 ];
 
 function pickImages(seedIndex) {
@@ -58,127 +58,127 @@ const BAG_SIZES = ['Small', 'Medium', 'Large'];
 const ONE_SIZE = ['One Size'];
 
 const PRODUCTS = [
-  { id: 1, name: 'Alder Leather Tote', brand: 'Maison Cuir', category: 'Tote', price: 248, section: 'featured',
+  { id: 1, name: 'Alder Leather Tote', brand: 'Ginhawá', category: 'Tote', price: 2480, section: 'featured',
     rating: 4.8, reviews: 214, stock: 14, sizes: BAG_SIZES,
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }, { name: 'Sand', hex: '#D9C7A8' }],
     description: 'A roomy, structured tote in full-grain leather with a magnetic top closure and an interior zip pocket for the essentials.',
     images: pickImages(0) },
 
-  { id: 2, name: 'Rowan Canvas Backpack', brand: 'Northfield', category: 'Backpack', price: 189, section: 'featured',
+  { id: 2, name: 'Rowan Canvas Backpack', brand: 'Northfield', category: 'Backpack', price: 1890, section: 'featured',
     rating: 4.6, reviews: 168, stock: 20, sizes: BAG_SIZES,
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Waxed canvas and leather trim over a padded 15" laptop sleeve — built for the daily commute and everything after it.',
     images: pickImages(1) },
 
-  { id: 3, name: 'Sable Mini Crossbody', brand: 'Maison Cuir', category: 'Crossbody', price: 165, section: 'featured',
+  { id: 3, name: 'Sable Mini Crossbody', brand: 'Ginhawá', category: 'Crossbody', price: 1650, section: 'featured',
     rating: 4.7, reviews: 132, stock: 9, sizes: ONE_SIZE,
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Burgundy', hex: '#6E2B2B' }],
     description: 'A compact crossbody with an adjustable strap and just enough room for a phone, cards, and keys.',
     images: pickImages(2) },
 
-  { id: 4, name: 'Vela Structured Satchel', brand: 'Ferro & Co.', category: 'Satchel', price: 312, section: 'featured',
+  { id: 4, name: 'Vela Structured Satchel', brand: 'Ferro & Co.', category: 'Satchel', price: 3120, section: 'featured',
     rating: 4.9, reviews: 97, stock: 6, sizes: BAG_SIZES,
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Sharp, architectural lines and a detachable strap make this satchel equally at home on a desk or a shoulder.',
     images: pickImages(3) },
 
-  { id: 5, name: 'Ember Evening Clutch', brand: 'Maison Cuir', category: 'Clutch', price: 128, section: 'new', badge: 'New',
+  { id: 5, name: 'Ember Evening Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1280, section: 'new', badge: 'New',
     rating: 4.5, reviews: 41, stock: 12, sizes: ONE_SIZE,
     colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Ivory', hex: '#EFE8DA' }],
     description: 'A slim envelope clutch with a slide-out wrist strap, finished in soft pebbled leather.',
     images: pickImages(4) },
 
-  { id: 6, name: 'Denali Weekend Duffel', brand: 'Northfield', category: 'Duffel', price: 268, section: 'new', badge: 'New',
+  { id: 6, name: 'Denali Weekend Duffel', brand: 'Northfield', category: 'Duffel', price: 2680, section: 'new', badge: 'New',
     rating: 4.7, reviews: 76, stock: 8, sizes: BAG_SIZES,
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Stone', hex: '#B9AE9C' }],
     description: 'Water-resistant canvas, reinforced base, and a trolley sleeve — sized for a long weekend away.',
     images: pickImages(5) },
 
-  { id: 7, name: 'Juno Slouch Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 214, section: 'new', badge: 'New',
+  { id: 7, name: 'Juno Slouch Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 2140, section: 'new', badge: 'New',
     rating: 4.4, reviews: 58, stock: 10, sizes: ONE_SIZE,
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Soft, unstructured leather that slouches beautifully, with a wide top for easy in-and-out access.',
     images: pickImages(6) },
 
-  { id: 8, name: 'Birch Daypack', brand: 'Northfield', category: 'Backpack', price: 176, section: 'new', badge: 'New',
+  { id: 8, name: 'Birch Daypack', brand: 'Northfield', category: 'Backpack', price: 1760, section: 'new', badge: 'New',
     rating: 4.6, reviews: 89, stock: 4, sizes: BAG_SIZES,
     colors: [{ name: 'Sand', hex: '#D9C7A8' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'A lightweight daypack with a quick-access front pocket and breathable mesh straps.',
     images: pickImages(7) },
 
-  { id: 9, name: 'Marlow Everyday Tote', brand: 'Maison Cuir', category: 'Tote', price: 232, was: 265, section: 'best',
+  { id: 9, name: 'Marlow Everyday Tote', brand: 'Ginhawá', category: 'Tote', price: 2320, was: 2650, section: 'best',
     rating: 4.8, reviews: 301, stock: 17, sizes: BAG_SIZES,
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Our best-selling tote: an open top, flat base, and enough structure to hold its shape all day.',
     images: pickImages(8) },
 
-  { id: 10, name: 'Reed Crossbody Saddle', brand: 'Ferro & Co.', category: 'Crossbody', price: 154, section: 'best',
+  { id: 10, name: 'Reed Crossbody Saddle', brand: 'Ferro & Co.', category: 'Crossbody', price: 1540, section: 'best',
     rating: 4.6, reviews: 145, stock: 13, sizes: ONE_SIZE,
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'A classic saddle-shaped crossbody with a flap closure and an antique brass buckle.',
     images: pickImages(9) },
 
-  { id: 11, name: 'Halden Top-Handle Satchel', brand: 'Maison Cuir', category: 'Satchel', price: 298, was: 340, section: 'best',
+  { id: 11, name: 'Halden Top-Handle Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2980, was: 3400, section: 'best',
     rating: 4.9, reviews: 118, stock: 3, sizes: BAG_SIZES,
     colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'A polished top-handle satchel with a fold-over flap and a hidden magnetic clasp.',
     images: pickImages(10) },
 
-  { id: 12, name: 'Otto Trail Duffel', brand: 'Northfield', category: 'Duffel', price: 245, section: 'best',
+  { id: 12, name: 'Otto Trail Duffel', brand: 'Northfield', category: 'Duffel', price: 2450, section: 'best',
     rating: 4.5, reviews: 84, stock: 11, sizes: BAG_SIZES,
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Rugged, weatherproof, and built around a wide U-shaped opening for fast packing.',
     images: pickImages(11) },
 
-  { id: 13, name: 'Summit Trail Backpack', brand: 'Northfield', category: 'Backpack', price: 198, section: 'shop',
+  { id: 13, name: 'Summit Trail Backpack', brand: 'Northfield', category: 'Backpack', price: 1980, section: 'shop',
     rating: 4.5, reviews: 62, stock: 5, sizes: BAG_SIZES,
     colors: [{ name: 'Stone', hex: '#B9AE9C' }, { name: 'Olive', hex: '#6B6B4F' }],
     description: 'A hiking-inspired backpack with a padded hip belt and a hydration-sleeve pocket.',
     images: pickImages(12) },
 
-  { id: 14, name: 'Linen Weekend Tote', brand: 'Ferro & Co.', category: 'Tote', price: 189, section: 'shop', badge: 'New',
+  { id: 14, name: 'Linen Weekend Tote', brand: 'Ferro & Co.', category: 'Tote', price: 1890, section: 'shop', badge: 'New',
     rating: 4.4, reviews: 29, stock: 14, sizes: BAG_SIZES,
     colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Sand', hex: '#D9C7A8' }],
     description: 'A soft linen-and-leather tote for easy weekends — light enough to fold flat when not in use.',
     images: pickImages(13) },
 
-  { id: 15, name: 'Pico Belt Bag Crossbody', brand: 'Maison Cuir', category: 'Crossbody', price: 118, section: 'shop', badge: 'New',
+  { id: 15, name: 'Pico Belt Bag Crossbody', brand: 'Ginhawá', category: 'Crossbody', price: 1180, section: 'shop', badge: 'New',
     rating: 4.3, reviews: 22, stock: 3, sizes: ONE_SIZE,
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Wear it crossbody or as a belt bag — a hands-free way to carry the basics.',
     images: pickImages(14) },
 
-  { id: 16, name: 'Opal Satin Clutch', brand: 'Ferro & Co.', category: 'Clutch', price: 142, section: 'shop', badge: 'New',
+  { id: 16, name: 'Opal Satin Clutch', brand: 'Ferro & Co.', category: 'Clutch', price: 1420, section: 'shop', badge: 'New',
     rating: 4.6, reviews: 33, stock: 9, sizes: ONE_SIZE,
     colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Burgundy', hex: '#6E2B2B' }],
     description: 'A satin-finished evening clutch with a slim gold frame closure.',
     images: pickImages(0) },
 
-  { id: 17, name: 'Noir Envelope Clutch', brand: 'Maison Cuir', category: 'Clutch', price: 136, section: 'shop',
+  { id: 17, name: 'Noir Envelope Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1360, section: 'shop',
     rating: 4.7, reviews: 51, stock: 0, sizes: ONE_SIZE,
     colors: [{ name: 'Black', hex: '#1E1B18' }],
     description: 'A minimalist envelope clutch in matte black leather. Currently sold out — more arriving soon.',
     images: pickImages(1) },
 
-  { id: 18, name: 'Corin Frame Satchel', brand: 'Maison Cuir', category: 'Satchel', price: 276, section: 'shop', badge: 'New',
+  { id: 18, name: 'Corin Frame Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2760, section: 'shop', badge: 'New',
     rating: 4.5, reviews: 18, stock: 11, sizes: BAG_SIZES,
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Chestnut', hex: '#7A4B2B' }],
     description: 'A boxy frame satchel with a rigid silhouette and a slim detachable crossbody strap.',
     images: pickImages(2) },
 
-  { id: 19, name: 'Willow Suede Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 224, section: 'shop', badge: 'New',
+  { id: 19, name: 'Willow Suede Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 2240, section: 'shop', badge: 'New',
     rating: 4.6, reviews: 27, stock: 7, sizes: ONE_SIZE,
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Stone', hex: '#B9AE9C' }],
     description: 'Buttery suede with a relaxed drape and a single slouchy shoulder strap.',
     images: pickImages(3) },
 
-  { id: 20, name: 'Marne Soft Hobo', brand: 'Northfield', category: 'Hobo', price: 199, section: 'shop',
+  { id: 20, name: 'Marne Soft Hobo', brand: 'Northfield', category: 'Hobo', price: 1990, section: 'shop',
     rating: 4.4, reviews: 46, stock: 16, sizes: ONE_SIZE,
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'An everyday hobo with a soft gusseted base that flexes to fit what you carry.',
     images: pickImages(4) },
 
-  { id: 21, name: 'Voyage Leather Duffel', brand: 'Maison Cuir', category: 'Duffel', price: 342, section: 'shop', badge: 'New',
+  { id: 21, name: 'Voyage Leather Duffel', brand: 'Ginhawá', category: 'Duffel', price: 3420, section: 'shop', badge: 'New',
     rating: 4.9, reviews: 15, stock: 6, sizes: BAG_SIZES,
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Full-grain leather duffel with brass hardware and a removable shoulder strap — built to age well.',
@@ -206,7 +206,7 @@ function getProductById(id) {
 const $ = (sel, scope = document) => scope.querySelector(sel);
 const $$ = (sel, scope = document) => Array.from(scope.querySelectorAll(sel));
 
-const formatPrice = (n) => `$${n.toFixed(2).replace(/\.00$/, '')}`;
+const formatPrice = (n) => `₱${n.toFixed(2).replace(/\.00$/, '')}`;
 
 function starString(rating) {
   const full = Math.round(rating);
@@ -221,7 +221,7 @@ const FALLBACK_IMG =
     <svg xmlns="http://www.w3.org/2000/svg" width="400" height="500">
       <rect width="400" height="500" fill="#EFE6D8"/>
       <text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="#9C6B3E"
-            text-anchor="middle" dominant-baseline="middle">Maison Cuir</text>
+            text-anchor="middle" dominant-baseline="middle">Ginhawá</text>
     </svg>`);
 
 let toastTimer = null;
