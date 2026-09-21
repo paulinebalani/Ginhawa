@@ -381,6 +381,92 @@ function cartTotals() {
   return { items, subtotal, shipping, total, itemCount };
 }
 
+// Re-checks every cart line against the product's current stock (in case
+// stock changed since the item was added) and clamps/removes as needed.
+// Returns true if anything had to be adjusted, so callers can warn the user
+// and block checkout when there isn't enough stock to fulfill the cart.
+function validateCartAgainstStock() {
+  let adjusted = false;
+
+  // Drop lines for products that no longer exist or are fully out of stock
+  const before = state.cart.length;
+  state.cart = state.cart.filter((line) => {
+    const product = getProductById(line.productId);
+    return product && product.stock > 0;
+  });
+  if (state.cart.length !== before) adjusted = true;
+
+  // Clamp each product's total requested quantity down to its current stock
+  const totals = {};
+  state.cart.forEach((line) => { totals[line.productId] = (totals[line.productId] || 0) + line.qty; });
+
+  Object.keys(totals).forEach((pid) => {
+    const product = getProductById(Number(pid));
+    if (!product) return;
+    let over = totals[pid] - product.stock;
+    if (over > 0) {
+      adjusted = true;
+      state.cart.forEach((line) => {
+        if (over <= 0 || line.productId !== Number(pid)) return;
+        const reduceBy = Math.min(line.qty, over);
+        line.qty -= reduceBy;
+        over -= reduceBy;
+      });
+      state.cart = state.cart.filter((line) => line.qty > 0);
+    }
+  });
+
+  if (adjusted) {
+    saveCart();
+    updateHeaderCounts();
+  }
+  return adjusted;
+}
+
+/* ------------------------------------------------------------
+   Cart selection — which cart lines are checked for checkout.
+   New items default to selected; unchecking an item just excludes
+   it from checkout totals/placement — it is never removed from the cart.
+   ------------------------------------------------------------ */
+const cartSelection = new Set();     // keys currently selected
+const cartSelectionSeen = new Set(); // keys already given a default once
+
+function syncCartSelectionState() {
+  const currentKeys = new Set(state.cart.map((l) => l.key));
+  Array.from(cartSelection).forEach((k) => { if (!currentKeys.has(k)) cartSelection.delete(k); });
+  Array.from(cartSelectionSeen).forEach((k) => { if (!currentKeys.has(k)) cartSelectionSeen.delete(k); });
+  state.cart.forEach((line) => {
+    if (!cartSelectionSeen.has(line.key)) {
+      cartSelectionSeen.add(line.key);
+      cartSelection.add(line.key); // default: selected
+    }
+  });
+}
+
+function setCartLineSelected(key, isSelected) {
+  syncCartSelectionState();
+  if (isSelected) cartSelection.add(key);
+  else cartSelection.delete(key);
+  renderCart();
+}
+
+function getSelectedCartLines() {
+  syncCartSelectionState();
+  return state.cart
+    .filter((line) => cartSelection.has(line.key))
+    .map((line) => ({ ...line, product: getProductById(line.productId) }))
+    .filter((line) => line.product);
+}
+
+function selectedCartTotals() {
+  const items = getSelectedCartLines();
+  const subtotal = items.reduce((sum, l) => sum + l.product.price * l.qty, 0);
+  const itemCount = items.reduce((sum, l) => sum + l.qty, 0);
+  const shipping = itemCount === 0 ? 0 : (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT);
+  const total = subtotal + shipping;
+  return { items, subtotal, shipping, total, itemCount };
+}
+
 /* ------------------------------------------------------------
    SECTION 5: Wishlist logic
    ------------------------------------------------------------ */
@@ -507,18 +593,26 @@ function renderProductCard(product, opts = {}) {
   card.className = 'product-card' + (product.stock <= 0 ? ' is-out-of-stock' : '');
   card.dataset.id = product.id;
 
-  const badgeLabel = product.stock <= 0 ? 'Out of Stock' : (product.badge || (product.was ? 'Sale' : ''));
+  // Stock takes priority in the badge slot: out-of-stock or low-stock
+  // messaging is shown before a merchandising badge (New / Sale).
+  let badgeLabel = '';
+  if (product.stock <= 0) badgeLabel = 'Out of Stock';
+  else if (product.stock <= 5) badgeLabel = `Only ${product.stock} left`;
+  else if (product.badge) badgeLabel = product.badge;
+  else if (product.was) badgeLabel = 'Sale';
 
   card.innerHTML = `
     <div class="product-media" data-open-modal="${product.id}">
       ${badgeLabel ? `<span class="product-tag">${badgeLabel}</span>` : ''}
-      <button class="product-wish" type="button" data-id="${product.id}" aria-label="Toggle wishlist for ${product.name}" aria-pressed="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.35-9.5-8.8C.7 8 2 4.5 5.4 4c2-.3 3.7.7 4.6 2.2C10.9 4.7 12.6 3.7 14.6 4c3.4.5 4.7 4 3.9 7.2C16 15.65 12 20 12 20Z"/></svg>
-      </button>
       <img src="${product.images[0]}" alt="${product.name}, a ${product.category.toLowerCase()} bag by ${product.brand}" loading="lazy" />
-      <button class="product-quickadd" type="button" data-quickadd="${product.id}" aria-label="Add ${product.name} to cart" ${product.stock <= 0 ? 'disabled' : ''}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-      </button>
+      <div class="product-actions-bottom">
+        <button class="product-wish" type="button" data-id="${product.id}" aria-label="Toggle wishlist for ${product.name}" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.35-9.5-8.8C.7 8 2 4.5 5.4 4c2-.3 3.7.7 4.6 2.2C10.9 4.7 12.6 3.7 14.6 4c3.4.5 4.7 4 3.9 7.2C16 15.65 12 20 12 20Z"/></svg>
+        </button>
+        <button class="product-quickadd" type="button" data-quickadd="${product.id}" aria-label="Add ${product.name} to cart" ${product.stock <= 0 ? 'disabled' : ''}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        </button>
+      </div>
     </div>
     <p class="product-brand">${product.brand}</p>
     <h3 class="product-name product-name-link" data-open-modal="${product.id}">${product.name}</h3>
@@ -587,7 +681,7 @@ function closeProductModal() {
 function renderModalBody() {
   const p = currentModalProduct;
   if (!p) return;
-  const stockMsg = p.stock <= 0 ? 'Out of stock' : (p.stock <= 5 ? `Only ${p.stock} left in stock` : 'In stock');
+  const stockMsg = p.stock <= 0 ? 'Out of stock' : (p.stock <= 5 ? `Only ${p.stock} left in stock` : `${p.stock} in stock`);
   const stockClass = p.stock <= 0 ? 'is-out' : (p.stock <= 5 ? 'is-low' : '');
   const body = $('#modalBody');
 
@@ -826,12 +920,14 @@ function renderShop() {
 
 // ---- Cart ----
 function renderCart() {
-  const { items, subtotal, shipping, total } = cartTotals();
+  syncCartSelectionState();
+  const { items: allItems } = cartTotals();
+  const { subtotal, shipping, total } = selectedCartTotals();
   const cartItemsEl = $('#cartItems');
   const layout = $('#cartLayout');
   const empty = $('#cartEmpty');
 
-  if (items.length === 0) {
+  if (allItems.length === 0) {
     layout.style.display = 'none';
     empty.hidden = false;
     return;
@@ -840,10 +936,16 @@ function renderCart() {
   empty.hidden = true;
 
   cartItemsEl.innerHTML = '';
-  items.forEach((line) => {
+  allItems.forEach((line) => {
     const row = document.createElement('div');
     row.className = 'cart-line';
     row.innerHTML = `
+      <div class="cart-line-controls">
+        <button class="product-wish" type="button" data-id="${line.productId}" aria-label="Toggle wishlist for ${line.product.name}" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.35-9.5-8.8C.7 8 2 4.5 5.4 4c2-.3 3.7.7 4.6 2.2C10.9 4.7 12.6 3.7 14.6 4c3.4.5 4.7 4 3.9 7.2C16 15.65 12 20 12 20Z"/></svg>
+        </button>
+        <input type="checkbox" class="cart-line-select" data-key="${line.key}" ${cartSelection.has(line.key) ? 'checked' : ''} aria-label="Select ${line.product.name} for checkout" />
+      </div>
       <div class="cart-line-media"><img src="${line.product.images[0]}" alt="${line.product.name}" /></div>
       <div class="cart-line-info">
         <p class="product-brand">${line.product.brand}</p>
@@ -861,6 +963,15 @@ function renderCart() {
       <div class="cart-line-price">${formatPrice(line.product.price * line.qty)}</div>
     `;
     row.querySelector('img').addEventListener('error', (e) => { e.target.src = FALLBACK_IMG; }, { once: true });
+
+    const wishBtn = row.querySelector('.product-wish');
+    syncWishlistButton(wishBtn, line.productId);
+    wishBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(line.productId); });
+
+    row.querySelector('.cart-line-select').addEventListener('change', (e) => {
+      setCartLineSelected(line.key, e.target.checked);
+    });
+
     row.querySelector('[data-qty-minus]').addEventListener('click', () => updateCartLineQty(line.key, line.qty - 1));
     row.querySelector('[data-qty-plus]').addEventListener('click', () => updateCartLineQty(line.key, line.qty + 1));
     row.querySelector('[data-qty-input]').addEventListener('change', (e) => {
@@ -939,9 +1050,13 @@ const checkoutData = {
 };
 
 function renderCheckoutEntry() {
-  const { itemCount } = cartTotals();
+  if (validateCartAgainstStock()) {
+    toast('Some items in your cart exceeded available stock and were adjusted.', 'error');
+    renderCart();
+  }
+  const { itemCount } = selectedCartTotals();
   if (itemCount === 0) {
-    toast('Your cart is empty.', 'error');
+    toast('Select at least one item in your cart to checkout.', 'error');
     location.hash = 'cart';
     return;
   }
@@ -957,7 +1072,7 @@ function prefillCheckoutForms() {
 }
 
 function renderCheckoutSummary() {
-  const { items, subtotal, shipping, total } = cartTotals();
+  const { items, subtotal, shipping, total } = selectedCartTotals();
   const wrap = $('#checkoutSummaryItems');
   wrap.innerHTML = items.map((l) => `
     <div class="summary-item-row">
@@ -1042,7 +1157,7 @@ function validatePaymentForm() {
 function renderReviewStep() {
   const s = checkoutData.shipping;
   const p = checkoutData.payment;
-  const { items, subtotal, shipping, total } = cartTotals();
+  const { items, subtotal, shipping, total } = selectedCartTotals();
 
   $('#reviewShipping').innerHTML = `
     <h3>Shipping To</h3>
@@ -1070,7 +1185,23 @@ function renderReviewStep() {
 }
 
 function placeOrder() {
-  const { items, subtotal, shipping, total } = cartTotals();
+  // Final stock check — prevents checkout from completing if any item in the
+  // cart now exceeds what's actually available (e.g. stock changed since it
+  // was added).
+  if (validateCartAgainstStock()) {
+    toast('Stock changed for one or more items — your order was not placed. Please review your cart.', 'error');
+    renderCheckoutSummary();
+    if (checkoutStep === 'review') renderReviewStep();
+    return;
+  }
+
+  const { items, subtotal, shipping, total, itemCount } = selectedCartTotals();
+  if (itemCount === 0) {
+    toast('Select at least one item in your cart to checkout.', 'error');
+    location.hash = 'cart';
+    return;
+  }
+
   const btn = $('#placeOrderBtn');
   btn.classList.add('is-loading');
   btn.disabled = true;
@@ -1096,7 +1227,11 @@ function placeOrder() {
     state.orders.push(order);
     saveOrders();
 
-    state.cart = [];
+    // Only remove the purchased (selected) lines — anything left unselected
+    // stays in the cart.
+    const purchasedKeys = new Set(items.map((l) => l.key));
+    state.cart = state.cart.filter((l) => !purchasedKeys.has(l.key));
+    purchasedKeys.forEach((k) => { cartSelection.delete(k); cartSelectionSeen.delete(k); });
     saveCart();
     updateHeaderCounts();
 
@@ -1246,8 +1381,8 @@ function initHeaderAndGlobalEvents() {
   $('#wishlistBtn').addEventListener('click', () => goTo('wishlist'));
   $('#cartBtn').addEventListener('click', () => goTo('cart'));
 
-  // Footer social icons are placeholders — prevent an unexpected jump home
-  $$('.footer-socials a').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
+  // Footer social icons link out to the real platforms (see index.html);
+  // no JS interception needed — the browser handles the navigation.
 
   // Back-to-top
   const backToTop = $('#backToTop');
@@ -1345,6 +1480,7 @@ function initHeaderAndGlobalEvents() {
   // Checkout — cart button
   $('#checkoutBtn').addEventListener('click', () => {
     if (cartTotals().itemCount === 0) { toast('Your cart is empty.', 'error'); return; }
+    if (selectedCartTotals().itemCount === 0) { toast('Select at least one item in your cart to checkout.', 'error'); return; }
     goTo('checkout');
   });
 

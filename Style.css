@@ -416,10 +416,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-weight: 600;
 }
 
-.product-wish {
+.product-actions-bottom {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-wish {
+  position: static;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -427,13 +435,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity .2s var(--ease), transform .2s var(--ease);
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: background-color .2s var(--ease), color .2s var(--ease);
 }
 .product-wish svg { width: 17px; height: 17px; color: var(--color-ink); }
-.product-card:hover .product-wish,
-.product-wish:focus-visible { opacity: 1; transform: translateY(0); }
 
 .product-brand { font-size: 12px; color: var(--color-ink-soft); margin: 0 0 2px; }
 .product-name { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
@@ -604,9 +611,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
    SECTION: Product card additions (quick-add + rating + stock)
    ------------------------------------------------------------- */
 .product-quickadd {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+  position: static;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -617,6 +622,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   justify-content: center;
   opacity: 0;
   transform: translateY(6px);
+  pointer-events: auto;
   transition: opacity .2s var(--ease), transform .2s var(--ease), background-color .2s var(--ease);
 }
 .product-quickadd svg { width: 16px; height: 16px; }
@@ -818,10 +824,39 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 .cart-line {
   display: grid;
-  grid-template-columns: 92px 1fr auto;
+  grid-template-columns: auto 92px 1fr auto;
   gap: 16px;
   padding: 20px 0;
   border-bottom: 1px solid var(--color-line);
+}
+.cart-line-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding-top: 2px;
+}
+/* The heart sits above the checkbox and is always visible + clickable here
+   (the card-grid version only reveals on hover — this context has no hover
+   affordance to rely on, and nothing else overlaps this column). */
+.cart-line-controls .product-wish {
+  position: static;
+  opacity: 1;
+  transform: none;
+  width: 26px;
+  height: 26px;
+  z-index: 1;
+  pointer-events: auto;
+}
+.cart-line-controls .product-wish svg { width: 15px; height: 15px; }
+.cart-line-select {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--color-leather);
+  cursor: pointer;
+  pointer-events: auto;
 }
 .cart-line-media {
   width: 92px; height: 100px;
@@ -1099,8 +1134,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 @media (max-width: 640px) {
   .form-row, .form-row-3 { grid-template-columns: 1fr; }
-  .cart-line { grid-template-columns: 72px 1fr; }
-  .cart-line-price { grid-column: 2 / 3; text-align: left; margin-top: 8px; }
+  .cart-line { grid-template-columns: auto 72px 1fr; }
+  .cart-line-price { grid-column: 1 / 4; text-align: left; margin-top: 8px; }
   .step-indicator { gap: 16px; padding: 0 16px 24px; }
   .auth-card { margin: 40px 16px 80px; padding: 32px 22px; }
   .checkout-form-area { padding: 22px; }
