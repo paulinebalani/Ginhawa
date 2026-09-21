@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison Cuir — Premium Bags</title>
+
+  <!-- Google Fonts: Fraunces for headings/brand, Inter for UI & body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Toast notifications (success / error messages) -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- =========================================================
+       HEADER — persistent across every view
+       ========================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+
+      <div class="header-side header-left">
+        <button class="icon-btn search-gap" id="searchToggleBtn" aria-label="Search" aria-expanded="false" aria-controls="searchBar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+
+      <a href="#home" class="brand" id="brandLink" aria-label="Maison Cuir home">Maison&nbsp;Cuir</a>
+
+      <div class="header-side header-right">
+        <button class="icon-btn" aria-label="Account" id="accountBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist" id="wishlistBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20s-7-4.35-9.5-8.8C.7 8 2 4.5 5.4 4c2-.3 3.7.7 4.6 2.2C10.9 4.7 12.6 3.7 14.6 4c3.4.5 4.7 4 3.9 7.2C16 15.65 12 20 12 20Z"/></svg>
+          <span class="badge" id="wishlistCount" data-zero>0</span>
+        </button>
+        <button class="icon-btn" aria-label="Cart" id="cartBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="badge" id="cartCount" data-zero>0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Functional search bar -->
+    <div class="search-bar" id="searchBar">
+      <div class="search-bar-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
+        <button class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
+      </div>
+      <p class="search-hint" id="searchHint"></p>
+    </div>
+
+    <!-- Category navigation — controls the Shop view's filter from anywhere -->
+    <nav class="category-nav" aria-label="Bag categories">
+      <ul class="category-list" id="categoryList">
+        <li><button class="cat-pill is-active" data-category="all">All</button></li>
+        <li><button class="cat-pill" data-category="Backpack">Backpack</button></li>
+        <li><button class="cat-pill" data-category="Tote">Tote</button></li>
+        <li><button class="cat-pill" data-category="Crossbody">Crossbody</button></li>
+        <li><button class="cat-pill" data-category="Clutch">Clutch</button></li>
+        <li><button class="cat-pill" data-category="Satchel">Satchel</button></li>
+        <li><button class="cat-pill" data-category="Hobo">Hobo</button></li>
+        <li><button class="cat-pill" data-category="Duffel">Duffel</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HOME VIEW — hero, curated showcases (unchanged design)
+         ========================================================= -->
+    <section class="view is-active" id="view-home">
+
+      <section class="hero" id="hero">
+        <div class="hero-slides" id="heroSlides">
+
+          <div class="hero-slide is-active" style="background-image:url('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1800&q=80')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">The Autumn Edit</p>
+              <h1>Carry it with quiet confidence</h1>
+              <p class="hero-copy">Full-grain leather, hand-finished hardware, and silhouettes built to outlast the season.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=1800&q=80')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">Everyday Carry</p>
+              <h1>Backpacks made for motion</h1>
+              <p class="hero-copy">Padded, weatherproof, and cut for city commutes or weekend trails.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=1800&q=80')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">Weekend Away</p>
+              <h1>Travel light, arrive elegant</h1>
+              <p class="hero-copy">Duffels and totes roomy enough for a long weekend, light enough to forget you're carrying them.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="hero-arrow hero-arrow-prev" id="heroPrev" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="hero-arrow hero-arrow-next" id="heroNext" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="hero-dots" id="heroDots"></div>
+      </section>
+
+      <section class="section" id="featured">
+        <div class="section-head">
+          <h2>Featured Bags</h2>
+          <p>A short list of what we'd carry ourselves this month.</p>
+        </div>
+        <div class="product-grid" id="featuredGrid"></div>
+      </section>
+
+      <section class="section section-muted" id="popular-categories">
+        <div class="section-head">
+          <h2>Popular Categories</h2>
+          <p>Find your shape, then find your favorite.</p>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <section class="section" id="new-arrivals">
+        <div class="section-head">
+          <h2>New Arrivals</h2>
+          <p>Fresh off the workbench.</p>
+        </div>
+        <div class="product-grid" id="newArrivalsGrid"></div>
+      </section>
+
+      <span id="lifestyle-anchor"></span>
+      <section class="lifestyle" id="lifestyle">
+        <div class="lifestyle-media">
+          <img src="https://images.unsplash.com/photo-1591085686350-798c0f9faa7f?auto=format&fit=crop&w=1400&q=80" alt="Model walking with a tan leather tote bag over one shoulder" loading="lazy" />
+        </div>
+        <div class="lifestyle-copy">
+          <p class="hero-kicker">In the Wild</p>
+          <h2>Built for the day you actually have</h2>
+          <p>From the morning commute to a spontaneous dinner, our bags are designed to move the way you do — structured enough for the office, soft enough for the weekend.</p>
+          <a href="#shop" class="btn btn-primary" data-nav="shop">Shop the Look</a>
+        </div>
+      </section>
+
+      <section class="section" id="best-sellers">
+        <div class="section-head">
+          <h2>Best-Selling Styles</h2>
+          <p>Loved on repeat by our customers.</p>
+        </div>
+        <div class="product-grid" id="bestSellersGrid"></div>
+      </section>
+    </section>
+
+    <!-- =========================================================
+         SHOP VIEW — full catalog with search, filter, sort
+         ========================================================= -->
+    <section class="view" id="view-shop">
+      <div class="view-header">
+        <h1 id="shopTitle">Shop All Bags</h1>
+        <p id="shopMeta">Showing every style.</p>
+      </div>
+      <div class="shop-controls">
+        <p class="shop-active-filter" id="shopActiveFilter"></p>
+        <label class="sort-field">
+          <span>Sort by</span>
+          <select id="sortSelect">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="newest">Newest</option>
+          </select>
+        </label>
+      </div>
+      <div class="product-grid" id="shopGrid"></div>
+      <div class="empty-state" id="shopEmpty" hidden>
+        <p>No bags match your search.</p>
+        <button class="btn btn-primary" id="shopResetBtn">Clear filters</button>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CART VIEW
+         ========================================================= -->
+    <section class="view" id="view-cart">
+      <div class="view-header"><h1>Your Cart</h1></div>
+      <div class="cart-layout" id="cartLayout">
+        <div class="cart-items" id="cartItems"></div>
+        <aside class="summary-card" id="cartSummary">
+          <h2>Order Summary</h2>
+          <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="cartShipping">$0</span></div>
+          <p class="summary-note" id="cartShippingNote"></p>
+          <div class="summary-row summary-total"><span>Total</span><span id="cartTotal">$0</span></div>
+          <button class="btn btn-primary btn-block" id="checkoutBtn">Proceed to Checkout</button>
+          <a href="#shop" class="btn btn-ghost-dark btn-block" data-nav="shop">Continue Shopping</a>
+        </aside>
+      </div>
+      <div class="empty-state" id="cartEmpty" hidden>
+        <p>Your cart is empty.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Start Shopping</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         WISHLIST VIEW
+         ========================================================= -->
+    <section class="view" id="view-wishlist">
+      <div class="view-header"><h1>Your Wishlist</h1></div>
+      <div class="product-grid" id="wishlistGrid"></div>
+      <div class="empty-state" id="wishlistEmpty" hidden>
+        <p>Nothing saved yet. Tap the heart on any bag to save it here.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Browse Bags</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         LOGIN VIEW
+         ========================================================= -->
+    <section class="view" id="view-login">
+      <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="auth-sub">Log in to check out, and view your order history.</p>
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" autocomplete="email" required />
+            <p class="field-error" id="loginEmailError"></p>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password" required />
+            <p class="field-error" id="loginPasswordError"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">
+            <span class="btn-label">Log In</span>
+          </button>
+        </form>
+        <p class="auth-switch">New here? <a href="#register" data-nav="register">Create an account</a></p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         REGISTER VIEW
+         ========================================================= -->
+    <section class="view" id="view-register">
+      <div class="auth-card">
+        <h1>Create your account</h1>
+        <p class="auth-sub">Save a wishlist, check out faster, and track orders.</p>
+        <form id="registerForm" novalidate>
+          <div class="field">
+            <label for="registerName">Full name</label>
+            <input type="text" id="registerName" autocomplete="name" required />
+            <p class="field-error" id="registerNameError"></p>
+          </div>
+          <div class="field">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" autocomplete="email" required />
+            <p class="field-error" id="registerEmailError"></p>
+          </div>
+          <div class="field">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" autocomplete="new-password" required />
+            <p class="field-error" id="registerPasswordError"></p>
+          </div>
+          <div class="field">
+            <label for="registerConfirm">Confirm password</label>
+            <input type="password" id="registerConfirm" autocomplete="new-password" required />
+            <p class="field-error" id="registerConfirmError"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="registerSubmitBtn">
+            <span class="btn-label">Create Account</span>
+          </button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#login" data-nav="login">Log in</a></p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         ACCOUNT VIEW
+         ========================================================= -->
+    <section class="view" id="view-account">
+      <div class="view-header"><h1>My Account</h1></div>
+      <div class="account-layout">
+        <div class="account-card" id="accountInfo"></div>
+        <div class="account-actions">
+          <a href="#orders" class="btn btn-ghost-dark btn-block" data-nav="orders">View Order History</a>
+          <button class="btn btn-primary btn-block" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CHECKOUT VIEW — Shipping → Payment → Review
+         ========================================================= -->
+    <section class="view" id="view-checkout">
+      <div class="view-header"><h1>Checkout</h1></div>
+
+      <ol class="step-indicator" id="stepIndicator">
+        <li class="step is-active" data-step="shipping"><span class="step-num">1</span>Shipping</li>
+        <li class="step" data-step="payment"><span class="step-num">2</span>Payment</li>
+        <li class="step" data-step="review"><span class="step-num">3</span>Review</li>
+      </ol>
+
+      <div class="checkout-layout">
+        <div class="checkout-form-area">
+
+          <form class="checkout-step is-active" id="stepShipping" novalidate>
+            <h2>Shipping Information</h2>
+            <div class="field">
+              <label for="shipFullName">Full name</label>
+              <input type="text" id="shipFullName" required />
+              <p class="field-error" id="shipFullNameError"></p>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="shipEmail">Email</label>
+                <input type="email" id="shipEmail" required />
+                <p class="field-error" id="shipEmailError"></p>
+              </div>
+              <div class="field">
+                <label for="shipPhone">Phone</label>
+                <input type="tel" id="shipPhone" required />
+                <p class="field-error" id="shipPhoneError"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="shipAddress">Address</label>
+              <input type="text" id="shipAddress" required />
+              <p class="field-error" id="shipAddressError"></p>
+            </div>
+            <div class="form-row form-row-3">
+              <div class="field">
+                <label for="shipCity">City</label>
+                <input type="text" id="shipCity" required />
+                <p class="field-error" id="shipCityError"></p>
+              </div>
+              <div class="field">
+                <label for="shipState">State / Province</label>
+                <input type="text" id="shipState" required />
+                <p class="field-error" id="shipStateError"></p>
+              </div>
+              <div class="field">
+                <label for="shipZip">Postal code</label>
+                <input type="text" id="shipZip" required />
+                <p class="field-error" id="shipZipError"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="shipCountry">Country</label>
+              <select id="shipCountry" required>
+                <option value="">Select a country</option>
+                <option>United States</option>
+                <option>Canada</option>
+                <option>United Kingdom</option>
+                <option>Philippines</option>
+                <option>Australia</option>
+                <option>Other</option>
+              </select>
+              <p class="field-error" id="shipCountryError"></p>
+            </div>
+            <div class="checkout-step-actions">
+              <a href="#cart" class="btn btn-ghost-dark" data-nav="cart">Back to Cart</a>
+              <button type="submit" class="btn btn-primary">Continue to Payment</button>
+            </div>
+          </form>
+
+          <form class="checkout-step" id="stepPayment" novalidate>
+            <h2>Payment Method</h2>
+            <div class="payment-options" id="paymentOptions">
+              <label class="payment-option is-active">
+                <input type="radio" name="paymentMethod" value="card" checked />
+                <span class="payment-option-label">Credit / Debit Card</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="paypal" />
+                <span class="payment-option-label">PayPal</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="cod" />
+                <span class="payment-option-label">Cash on Delivery</span>
+              </label>
+            </div>
+
+            <div id="cardFields">
+              <div class="field">
+                <label for="cardName">Name on card</label>
+                <input type="text" id="cardName" />
+                <p class="field-error" id="cardNameError"></p>
+              </div>
+              <div class="field">
+                <label for="cardNumber">Card number</label>
+                <input type="text" id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19" />
+                <p class="field-error" id="cardNumberError"></p>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="cardExpiry">Expiry (MM/YY)</label>
+                  <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" />
+                  <p class="field-error" id="cardExpiryError"></p>
+                </div>
+                <div class="field">
+                  <label for="cardCvc">CVC</label>
+                  <input type="text" id="cardCvc" inputmode="numeric" maxlength="4" />
+                  <p class="field-error" id="cardCvcError"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout-step-actions">
+              <button type="button" class="btn btn-ghost-dark" data-checkout-back="shipping">Back</button>
+              <button type="submit" class="btn btn-primary">Review Order</button>
+            </div>
+          </form>
+
+          <div class="checkout-step" id="stepReview">
+            <h2>Review Your Order</h2>
+            <div id="reviewShipping" class="review-block"></div>
+            <div id="reviewPayment" class="review-block"></div>
+            <div id="reviewItems" class="review-block"></div>
+            <div class="checkout-step-actions">
+              <button type="button" class="btn btn-ghost-dark" data-checkout-back="payment">Back</button>
+              <button type="button" class="btn btn-primary" id="placeOrderBtn">
+                <span class="btn-label">Place Order</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="summary-card" id="checkoutSummary">
+          <h2>Order Summary</h2>
+          <div id="checkoutSummaryItems"></div>
+          <div class="summary-row"><span>Subtotal</span><span id="checkoutSubtotal">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="checkoutShipping">$0</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span id="checkoutTotal">$0</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CONFIRMATION VIEW
+         ========================================================= -->
+    <section class="view" id="view-confirmation">
+      <div class="confirmation-card" id="confirmationContent"></div>
+    </section>
+
+    <!-- =========================================================
+         ORDERS VIEW
+         ========================================================= -->
+    <section class="view" id="view-orders">
+      <div class="view-header"><h1>Order History</h1></div>
+      <div class="orders-list" id="ordersList"></div>
+      <div class="empty-state" id="ordersEmpty" hidden>
+        <p>No orders yet. Once you check out, your orders will appear here.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Start Shopping</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       FOOTER — minimal
+       ========================================================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Maison&nbsp;Cuir</span>
+      <div class="footer-socials">
+        <a href="#" class="icon-btn" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </a>
+        <a href="#" class="icon-btn" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 18c1-3 1.5-5.4 1.5-7a3 3 0 1 1 5.7 1.3c-.4 1.7-1.7 3-3.2 3-.7 0-1.2-.3-1.4-.7"/></svg>
+        </a>
+        <a href="#" class="icon-btn" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 9h2V6h-2a3 3 0 0 0-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9Z"/></svg>
+        </a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Maison Cuir. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Floating back-to-top button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <!-- =========================================================
+       PRODUCT QUICK-VIEW MODAL
+       ========================================================= -->
+  <div class="modal-overlay" id="productModal" hidden>
+    <div class="modal product-modal" role="dialog" aria-modal="true" aria-labelledby="modalProductName">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close product details">&times;</button>
+      <div class="modal-body" id="modalBody"><!-- injected by script.js --></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
