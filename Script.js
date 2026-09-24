@@ -200,6 +200,27 @@ function getProductById(id) {
   return PRODUCTS.find((p) => p.id === Number(id));
 }
 
+// Starter set of customer reviews shown on the Reviews view until real
+// customers add their own (their submissions persist in localStorage
+// alongside this seed list — see SECTION 15).
+const DEFAULT_REVIEWS = [
+  { id: 1, name: 'Maya S.', bagType: 'Tote', rating: 5,
+    text: "The Alder Leather Tote is even better in person — it holds its shape all day and the leather is only getting richer with wear. Fits my 13\" laptop with room to spare.",
+    image: null, date: '2026-08-14T09:20:00.000Z' },
+  { id: 2, name: 'James R.', bagType: 'Backpack', rating: 5,
+    text: "Bought the Rowan Canvas Backpack for my commute and it's been flawless — padded sleeve actually protects my laptop, and the canvas has shrugged off two rainy mornings so far.",
+    image: null, date: '2026-07-29T15:05:00.000Z' },
+  { id: 3, name: 'Dani K.', bagType: 'Duffel', rating: 4,
+    text: 'The Denali Weekend Duffel is roomy and well-built. Only wish the shoulder strap padding were a bit thicker for longer walks through the airport, but overall very happy with it.',
+    image: null, date: '2026-07-02T11:40:00.000Z' },
+  { id: 4, name: 'Priya M.', bagType: 'Crossbody', rating: 5,
+    text: "The Sable Mini Crossbody is the perfect size for a night out — fits my phone, cards, and lipstick with zero bulk. Adjustable strap makes it easy to wear across my body or shoulder.",
+    image: null, date: '2026-06-18T18:12:00.000Z' },
+  { id: 5, name: 'Leo T.', bagType: 'Satchel', rating: 3,
+    text: "Beautiful satchel and the hardware feels premium, but I found the detachable strap a touch short for crossbody wear. Comfortable as a top-handle bag though, and customer service was helpful.",
+    image: null, date: '2026-06-03T08:50:00.000Z' },
+];
+
 /* ------------------------------------------------------------
    SECTION 2: Small utilities
    ------------------------------------------------------------ */
@@ -213,6 +234,14 @@ function starString(rating) {
   let out = '';
   for (let i = 0; i < 5; i += 1) out += i < full ? '★' : '☆';
   return out;
+}
+
+// Basic HTML-escaping for any user-submitted text (reviews, contact form)
+// before it's dropped into innerHTML.
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[ch]));
 }
 
 // A soft leather-toned placeholder used if a product photo fails to load
@@ -246,6 +275,7 @@ const STORAGE_KEYS = {
   SESSION: 'mc_session',
   ORDERS: 'mc_orders',
   STOCK: 'mc_stock',
+  REVIEWS: 'mc_reviews',
 };
 
 function loadJSON(key, fallback) {
@@ -270,6 +300,7 @@ const state = {
   users: loadJSON(STORAGE_KEYS.USERS, []),
   session: loadJSON(STORAGE_KEYS.SESSION, null),
   orders: loadJSON(STORAGE_KEYS.ORDERS, []),
+  reviews: loadJSON(STORAGE_KEYS.REVIEWS, DEFAULT_REVIEWS),
 };
 
 // Apply any stock changes from previous orders (persisted separately
@@ -285,6 +316,7 @@ const saveWishlist = () => saveJSON(STORAGE_KEYS.WISHLIST, state.wishlist);
 const saveUsers = () => saveJSON(STORAGE_KEYS.USERS, state.users);
 const saveSession = () => saveJSON(STORAGE_KEYS.SESSION, state.session);
 const saveOrders = () => saveJSON(STORAGE_KEYS.ORDERS, state.orders);
+const saveReviews = () => saveJSON(STORAGE_KEYS.REVIEWS, state.reviews);
 const saveStock = () => {
   const map = {};
   PRODUCTS.forEach((p) => { map[p.id] = p.stock; });
@@ -780,7 +812,10 @@ function renderModalBody() {
 /* ------------------------------------------------------------
    SECTION 9: Router
    ------------------------------------------------------------ */
-const KNOWN_VIEWS = ['home', 'shop', 'cart', 'wishlist', 'login', 'register', 'account', 'checkout', 'orders', 'confirmation'];
+const KNOWN_VIEWS = [
+  'home', 'shop', 'cart', 'wishlist', 'login', 'register', 'account', 'checkout', 'orders', 'confirmation',
+  'about', 'compare', 'reviews', 'faq', 'contact', 'shipping', 'returns',
+];
 const LOGIN_REQUIRED_VIEWS = ['checkout', 'orders', 'account'];
 let lastOrder = null;
 
@@ -789,6 +824,17 @@ function showView(name) {
   const el = document.getElementById(`view-${name}`);
   if (el) el.classList.add('is-active');
   previousHash = name;
+
+  // Wayfinding + nav chrome — kept in sync with whichever view is active
+  $('#backHomeBar').hidden = (name === 'home');
+  $$('.primary-nav a[href]').forEach((a) => {
+    a.classList.toggle('is-active', a.getAttribute('href') === `#${name}`);
+  });
+  $('#primaryNav').classList.remove('is-open');
+  $('#hamburgerBtn').setAttribute('aria-expanded', 'false');
+  $('#categoryPanel').classList.remove('is-open');
+  $('#categoriesToggle').setAttribute('aria-expanded', 'false');
+
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
@@ -829,6 +875,7 @@ function renderRoute() {
     case 'checkout': renderCheckoutEntry(); break;
     case 'orders': renderOrders(); break;
     case 'confirmation': renderConfirmationView(lastOrder); break;
+    case 'reviews': renderReviews(); break;
     default: break;
   }
 }
@@ -1357,10 +1404,36 @@ function initHeaderAndGlobalEvents() {
     searchInput.focus();
   });
 
+  // Hamburger menu — toggles the primary nav drawer on mobile/tablet
+  const hamburgerBtn = $('#hamburgerBtn');
+  const primaryNav = $('#primaryNav');
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = primaryNav.classList.toggle('is-open');
+    hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  // Categories dropdown — a single toggle reveals the category pills
+  const categoriesToggle = $('#categoriesToggle');
+  const categoryPanel = $('#categoryPanel');
+  categoriesToggle.addEventListener('click', () => {
+    const isOpen = categoryPanel.classList.toggle('is-open');
+    categoriesToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  // Skip to footer — small floating button, smooth-scrolls to the footer
+  const skipToFooterBtn = $('#skipToFooterBtn');
+  if (skipToFooterBtn) {
+    skipToFooterBtn.addEventListener('click', () => {
+      $('#siteFooter').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   // Category pills (persistent in the header, control the Shop view)
   $$('.cat-pill').forEach((pill) => {
     pill.addEventListener('click', () => {
       setCategoryFilter(pill.dataset.category);
+      categoryPanel.classList.remove('is-open');
+      categoriesToggle.setAttribute('aria-expanded', 'false');
       goTo('shop');
     });
   });
@@ -1492,12 +1565,235 @@ function initHeaderAndGlobalEvents() {
 }
 
 /* ------------------------------------------------------------
+   SECTION 15: Customer Reviews (ratings, submission, photo upload)
+   ------------------------------------------------------------ */
+function computeReviewStats() {
+  const total = state.reviews.length;
+  const avg = total ? state.reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0;
+  const counts = [0, 0, 0, 0, 0]; // index 0 => 1-star count ... index 4 => 5-star count
+  state.reviews.forEach((r) => { counts[r.rating - 1] += 1; });
+  return { total, avg, counts };
+}
+
+function renderReviewsSummary() {
+  const { total, avg, counts } = computeReviewStats();
+  const el = $('#reviewsSummary');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="reviews-summary-score">
+      <span class="reviews-summary-avg">${avg.toFixed(1)}</span>
+      <span class="stars">${starString(avg)}</span>
+      <span class="reviews-summary-count">${total} review${total === 1 ? '' : 's'}</span>
+    </div>
+    <div class="reviews-summary-bars">
+      ${[5, 4, 3, 2, 1].map((n) => {
+        const count = counts[n - 1];
+        const pct = total ? Math.round((count / total) * 100) : 0;
+        return `
+          <div class="rating-bar-row">
+            <span>${n}★</span>
+            <div class="rating-bar"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+            <span>${count}</span>
+          </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderReviews() {
+  renderReviewsSummary();
+  const list = $('#reviewsList');
+  if (!list) return;
+  const sorted = state.reviews.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  list.innerHTML = sorted.map((r) => `
+    <article class="review-card">
+      <div class="review-card-head">
+        <p class="review-card-name">${escapeHtml(r.name)}</p>
+        <p class="review-card-meta">
+          <span class="stars">${starString(r.rating)}</span>
+          ${r.bagType ? `· ${escapeHtml(r.bagType)}` : ''}
+          · ${new Date(r.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+        </p>
+      </div>
+      <p class="review-card-text">${escapeHtml(r.text)}</p>
+      ${r.image ? `<img class="review-card-image" src="${r.image}" alt="Photo submitted with ${escapeHtml(r.name)}'s review" />` : ''}
+    </article>
+  `).join('');
+}
+
+let reviewImageData = null;
+
+function initReviewsForm() {
+  const form = $('#reviewForm');
+  if (!form) return;
+
+  const ratingWrap = $('#reviewRatingInput');
+  const ratingButtons = $$('.star-input', ratingWrap);
+  const ratingValueInput = $('#reviewRatingValue');
+
+  ratingButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      ratingValueInput.value = btn.dataset.rating;
+      ratingButtons.forEach((b) => {
+        b.classList.toggle('is-filled', Number(b.dataset.rating) <= Number(btn.dataset.rating));
+      });
+      setFieldError('reviewRating', '');
+    });
+  });
+
+  const fileInput = $('#reviewImage');
+  const previewWrap = $('#reviewImagePreview');
+  const previewImg = $('#reviewImagePreviewImg');
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast('Please choose an image file.', 'error');
+      fileInput.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      reviewImageData = reader.result;
+      previewImg.src = reviewImageData;
+      previewWrap.hidden = false;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  $('#reviewImageRemove').addEventListener('click', () => {
+    reviewImageData = null;
+    fileInput.value = '';
+    previewWrap.hidden = true;
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+    setFieldError('reviewName', ''); setFieldError('reviewText', ''); setFieldError('reviewRating', '');
+
+    const name = $('#reviewName').value.trim();
+    const bagType = $('#reviewBagType').value;
+    const rating = Number(ratingValueInput.value);
+    const text = $('#reviewText').value.trim();
+
+    if (!name) { setFieldError('reviewName', 'Please enter your name.'); ok = false; }
+    if (!rating) { setFieldError('reviewRating', 'Please select a star rating.'); ok = false; }
+    if (!text) { setFieldError('reviewText', 'Please share a few words about your experience.'); ok = false; }
+    if (!ok) return;
+
+    const btn = $('#reviewSubmitBtn');
+    btn.classList.add('is-loading'); btn.disabled = true;
+
+    setTimeout(() => {
+      state.reviews.push({
+        id: Date.now(),
+        name, bagType, rating, text,
+        image: reviewImageData,
+        date: new Date().toISOString(),
+      });
+      saveReviews();
+
+      btn.classList.remove('is-loading'); btn.disabled = false;
+      form.reset();
+      ratingButtons.forEach((b) => b.classList.remove('is-filled'));
+      ratingValueInput.value = '0';
+      reviewImageData = null;
+      previewWrap.hidden = true;
+
+      renderReviews();
+      toast('Thank you for your review!', 'success');
+    }, 500);
+  });
+}
+
+/* ------------------------------------------------------------
+   SECTION 16: Compare Bags / Contact / Shipping / Newsletter
+   ------------------------------------------------------------ */
+function initCompareView() {
+  const btn = $('#compareToggleBtn');
+  const wrap = $('#compareTableWrap');
+  if (!btn || !wrap) return;
+  btn.addEventListener('click', () => {
+    const isHidden = wrap.classList.toggle('is-hidden');
+    btn.textContent = isHidden ? 'Show Table' : 'Hide Table';
+    btn.setAttribute('aria-expanded', String(!isHidden));
+  });
+}
+
+function initContactForm() {
+  const form = $('#contactForm');
+  if (!form) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let ok = true;
+    ['contactName', 'contactEmail', 'contactMessage'].forEach((id) => setFieldError(id, ''));
+
+    const name = $('#contactName').value.trim();
+    const email = $('#contactEmail').value.trim();
+    const message = $('#contactMessage').value.trim();
+
+    if (!name) { setFieldError('contactName', 'Please enter your name.'); ok = false; }
+    if (!EMAIL_RE.test(email)) { setFieldError('contactEmail', 'Enter a valid email address.'); ok = false; }
+    if (!message) { setFieldError('contactMessage', 'Please enter a message.'); ok = false; }
+    if (!ok) return;
+
+    const btn = $('#contactSubmitBtn');
+    btn.classList.add('is-loading'); btn.disabled = true;
+    setTimeout(() => {
+      btn.classList.remove('is-loading'); btn.disabled = false;
+      form.reset();
+      toast('Message sent — we will get back to you soon.', 'success');
+    }, 600);
+  });
+}
+
+function initNewsletterForm() {
+  const form = $('#newsletterForm');
+  if (!form) return;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = $('#newsletterEmail');
+    const email = emailInput.value.trim();
+    setFieldError('newsletterEmail', '');
+
+    if (!EMAIL_RE.test(email)) {
+      setFieldError('newsletterEmail', 'Enter a valid email address.');
+      return;
+    }
+
+    const btn = $('#newsletterSubmitBtn');
+    btn.classList.add('is-loading'); btn.disabled = true;
+    setTimeout(() => {
+      btn.classList.remove('is-loading'); btn.disabled = false;
+      form.reset();
+      toast(`Subscribed! Look out for updates at ${email}.`, 'success');
+    }, 500);
+  });
+}
+
+// Keep the Shipping Information page's flat-rate/free-shipping copy in
+// sync with the actual checkout constants, rather than hardcoding them twice.
+function initShippingInfoText() {
+  const flatEl = $('#shippingFlatRateText');
+  const thresholdEl = $('#freeShippingThresholdText');
+  if (flatEl) flatEl.textContent = formatPrice(SHIPPING_FLAT);
+  if (thresholdEl) thresholdEl.textContent = formatPrice(FREE_SHIPPING_THRESHOLD);
+}
+
+/* ------------------------------------------------------------
    SECTION 14: Init
    ------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
   updateHeaderCounts();
   initHeaderAndGlobalEvents();
   initHeroSlideshow();
+  initCompareView();
+  initReviewsForm();
+  initContactForm();
+  initNewsletterForm();
+  initShippingInfoText();
   renderHome();
   renderRoute();
 });

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ginhawá — Premium Bags</title>
+
+  <!-- Google Fonts: Fraunces for headings/brand, Inter for UI & body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <meta name="description" content="Ginhawá — handcrafted leather bags, backpacks, totes and travel pieces built to outlast the season." />
+  <link rel="stylesheet" href="Style.css" />
+</head>
+<body>
+
+  <!--p:first-letter { font-size:xx-large; }-->
+
+  <div class="skip-links">
+    <a id="top" class="skip-link" href="#pageFoot">Skip to page footer</a>
+    <a id="prev-top" class="skip-link" href="http://127.0.0.1:5500/Index.html">Skip to previous page head</a>
+  </div>
+
+  <script>
+  function showkey( e )
+  {
+    if ( e.keyCode === 89 || e.keyCode === 121)
+  {
+    alert ('Order complete. Thank you.')
+  }
+  }
+  document.onkeydown = showkey
+</script>
+
+  <!-- Toast notifications (success / error messages) -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- =========================================================
+       HEADER — persistent across every view
+       ========================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+
+      <div class="header-side header-left">
+        <button class="icon-btn search-gap" id="searchToggleBtn" aria-label="Search" aria-expanded="false" aria-controls="searchBar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+
+      <a href="#home" class="brand" id="brandLink" aria-label="Ginhawá"><strong>Ginhawá</strong></a>
+
+      <div class="header-side header-right">
+        <button class="icon-btn" aria-label="Account" id="accountBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Wishlist" id="wishlistBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20s-7-4.35-9.5-8.8C.7 8 2 4.5 5.4 4c2-.3 3.7.7 4.6 2.2C10.9 4.7 12.6 3.7 14.6 4c3.4.5 4.7 4 3.9 7.2C16 15.65 12 20 12 20Z"/></svg>
+          <span class="badge" id="wishlistCount" data-zero>0</span>
+        </button>
+        <button class="icon-btn" aria-label="Cart" id="cartBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="badge" id="cartCount" data-zero>0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Functional search bar -->
+    <div class="search-bar" id="searchBar">
+      <div class="search-bar-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
+        <button class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
+      </div>
+      <p class="search-hint" id="searchHint"></p>
+    </div>
+
+    <!-- Category navigation — controls the Shop view's filter from anywhere -->
+    <nav class="category-nav" aria-label="Bag categories">
+      <ul class="category-list" id="categoryList">
+        <li><button class="cat-pill is-active" data-category="all">All</button></li>
+        <li><button class="cat-pill" data-category="Backpack">Backpack</button></li>
+        <li><button class="cat-pill" data-category="Tote">Tote</button></li>
+        <li><button class="cat-pill" data-category="Crossbody">Crossbody</button></li>
+        <li><button class="cat-pill" data-category="Clutch">Clutch</button></li>
+        <li><button class="cat-pill" data-category="Satchel">Satchel</button></li>
+        <li><button class="cat-pill" data-category="Hobo">Hobo</button></li>
+        <li><button class="cat-pill" data-category="Duffel">Duffel</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         HOME VIEW — hero, curated showcases (unchanged design)
+         ========================================================= -->
+    <section class="view is-active" id="view-home">
+
+      <section class="hero" id="hero">
+        <div class="hero-slides" id="heroSlides">
+
+          <div class="hero-slide is-active" style="background-image:url('photos/ad.jpg')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">The Autumn Edit</p>
+              <h1>Carry it with quiet confidence</h1>
+              <p class="hero-copy">Full-grain leather, hand-finished hardware, and silhouettes built to outlast the season.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide" style="background-image:url('photos/ad bp.jpg')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">Everyday Carry</p>
+              <h1>Backpacks made for motion</h1>
+              <p class="hero-copy">Padded, weatherproof, and cut for city commutes or weekend trails.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide" style="background-image:url('photos/ad duff.jpg')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <p class="hero-kicker">Weekend Away</p>
+              <h1>Travel light, arrive elegant</h1>
+              <p class="hero-copy">Duffels and totes roomy enough for a long weekend, light enough to forget you're carrying them.</p>
+              <div class="hero-actions">
+                <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
+                <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="hero-arrow hero-arrow-prev" id="heroPrev" aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="hero-arrow hero-arrow-next" id="heroNext" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="hero-dots" id="heroDots"></div>
+      </section>
+
+<div class="photo-toggle">
+  <a href="javascript:toggle()" class="text-link">Show/hide picture</a>
+  <img id="photo" src="photos/download (1).jpg" alt="Photo" class="toggle-photo">
+</div>
+
+<script>
+function toggle() {
+  const chart = document.getElementById ('photo')
+  let hid = (chart.style.visibility !== 'visible')
+  chart.style.visibility = (hid) ? 'visible' : 'hidden'
+  chart.style.height = (hid) ? 'auto' : '0px'
+}
+</script>
+
+      <section class="section" id="featured">
+        <div class="section-head">
+          <h2><del>Featured</del> <ins>Bags</ins></h2>
+          <p>A short list of what we'd carry ourselves this month.</p>
+        </div>
+
+        <div class="notebook" id="craftNotes">
+          <div class="notebook-head">
+            <h3>The Ginhawá Notebook</h3>
+            <p>Notes, glossary, and reference elements kept alongside the shop.</p>
+          </div>
+
+<div class="note-block note-ascii">
+<pre>
+      -_- ... :]
+      ~~~~~~~~~~
+</pre>
+</div>
+
+<div class="note-block">
+<ruby>
+  <rb>kamusta?</rb>
+  <rt>como estas¿</rt>
+</ruby>
+</div>
+
+<div class="note-block">
+<dl class="glossary">
+  <dt>What is the purpose of a bag?</dt>
+  <dd>it is used to hold, carry, organize, and protect various items.</dd>
+</dl>
+
+<!--Terms with multiple description-->
+<dl class="glossary">
+  <dt><dfn>Bag</dfn></dt>
+  <dd class="grammar">noun</dd>
+  <dd class="spoken">[bag]</dd>
+  <dd>A bag is a soft or flexible container made of paper, plastic, cloth, or leather used to carry or store things.</dd>
+</dl>
+</div>
+
+<div class="note-block note-media">
+    <audio controls>
+    <source src="happy w u.mp3" type="audio/mp3">
+
+    [Fallback Message]
+</audio>
+
+<aside class="media-frame">
+    <iframe src="song.html" width="1200" height="700" title="Embedded page">
+    </iframe>
+    </aside>
+</div>
+
+<div class="note-block note-styles">
+ <h3>Bag Styles</h3>
+
+<figure id="front-stack">
+<img src="photos/ad.jpg" alt="Front-end" width="600" height="300">
+<figcaption class="reference">Figure 1: Structured Bags</figcaption>
+</figure>
+
+<p>A structured bag is a handbag, briefcase, or piece of luggage designed to hold its own shape and keep a crisp, defined silhouette, even when it is completely empty</p>
+
+<div class="back-container">
+
+    <p>
+        A backpack is a cloth, canvas, or synthetic bag with two shoulder straps that is worn on the back to carry loads hands-free  </p>
+
+    <figure id="back-stack">
+        <img src="photos/ad bp.jpg" alt="Back-end" width="600" height="300">
+        <figcaption class="reference">Figure 2: Backpack Bags</figcaption>
+    </figure>
+
+</div>
+</div>
+
+<div class="note-block">
+<p>This is text in the main document that...
+
+<object data="pdf.pdf" type="application/pdf" width="1250" height="700" class="pdf-frame">
+    [PDF Document - May require Adobe Reader Plugin]
+</object>
+
+...continues around an embedded resource.</p>
+</div>
+
+<div class="note-block note-lists">
+<div class="list-col">
+<ol>
+<li>HTML</li>
+<li>Cascading Style Sheets</li>
+<li>JavaScript</li>
+</ol>
+</div>
+
+<div class="list-col">
+<ol style="list-style-type:circle">
+<li>C Programming</li>
+<li>C++ Programming</li>
+<li>C# Programming</li>
+</ol>
+</div>
+
+<div class="list-col">
+<ul style="list-style-type:square">
+    <li>Bash</li>
+    <li>PHP</li>
+    <li>Python</li>
+</ul>
+</div>
+
+<div class="list-col">
+<ul style="list-style-type: disc;">
+    <li>Access</li>
+    <li>Excel VBA</li>
+    <li>Visual Basic</li>
+</ul>
+</div>
+</div>
+
+<div class="note-block note-table">
+<table>
+
+<caption>Product Inventory Table</caption>
+
+<colgroup class="sidebar"><col></colgroup>
+<colgroup class="info"><col class="stripe"><col><col class="stripe"></colgroup>
+<colgroup class="info"><col><col class="stripe"></colgroup>
+
+<thead><tr><th colspan="6">Ginhawá — Premium Bags</th></tr></thead>
+
+<tbody>
+<tr>
+  <th></th>
+  <th>Category</th>
+  <th>Price</th>
+  <th>Stock</th>
+  <th>Sold</th>
+  <th>Status</th>
+</tr>
+
+<tr>
+    <th>Classic Tote Bag</th>
+    <td>Tote</td>
+    <td>₱2300</td>
+    <td>25</td>
+    <td>15</td>
+    <td>Available</td>
+</tr>
+
+<tr>
+    <th>Travel Backpack</th>
+    <td>Backpack</td>
+    <td>₱1300</td>
+    <td>10</td>
+    <td>30</td>
+    <td>Low Stock</td>
+</tr>
+
+<tr>
+    <th>Mini Crossbody</th>
+    <td>Crossbody</td>
+    <td>₱3400</td>
+    <td>0</td>
+    <td>20</td>
+    <td>Out of Stock</td>
+</tr>
+</tbody>
+
+<tfoot>
+    <tr>
+        <td colspan="6">Ginhawá — Premium Bags</td>
+    </tr>
+</tfoot>
+</table>
+</div>
+
+<div class="note-block note-forms">
+<!-- Item 13: checkbox, button-->
+     <form method="GET" action="https://www.charleskeith.com/ph/bags">
+<fieldset>
+<legend>Bag Styles</legend>
+<input id="duffel" type="checkbox" name="Toppings" value="Duffel"> Duffel |
+<input id="tote" type="checkbox" name="Toppings" value="Tote"> Tote |
+<input id="crossbody" type="checkbox" name="Toppings" value="Crossbody"> Crossbody
+</fieldset>
+
+<div class="form-actions">
+<input type="reset" value="Reset Form">
+<input type="button" value="Choose For Me" id="chooseBtn">
+<input type="submit" value="Submit Form">
+</div>
+  </form>
+<script>
+    (function (){
+        const pep = document.getElementById('tote')
+        const btn = document.getElementById('chooseBtn')
+
+        btn.addEventListener('click', function () { pep.checked = true})
+    }) ()
+</script>
+
+<form method="GET" action="http://localhost/echo.py">
+
+<fieldset>
+    <legend>What kind of language is HTML?</legend>
+    <label><input type="radio" name="definition" value="scripting">Scripting</label>
+    <label><input type="radio" name="definition" value="markup">Markup</label>
+    <label><input type="radio" name="definition" value="programming" checked>Programming</label>
+</fieldset>
+
+<input type="submit">
+
+</form>
+
+<form method="GET" action="http://localhost/echo.py">
+
+<datalist id="browsers">
+    <option value="Google Chrome">
+    <option value="Firefox">
+    <option value="Internet Explorer">
+    <option value="Opera">
+    <option value="Safari">
+    <option value="Microsoft Edge">
+</datalist>
+
+<label class="field-inline">Choose your browser from this list:
+    <input list="browsers" name="myBrowser" />
+</label>
+
+<fieldset>
+    <legend>Favorite Color</legend>
+    <input type="text" name="Color">
+
+    <div class="form-actions">
+    <button type="button" onclick="alert('Enter your favorite color in the text box')">Submit</button>
+    <button type="submit"><img src="photos/button.jpg" width="50" height="50" alt="Submit">Submit</button>
+    <button type="reset"><img src="photos/button.jpg" width="50" height="50" alt="Reset">Reset</button>
+    </div>
+</fieldset>
+
+<div class="select-row">
+<select name="HTML List Type Selector One" size="4">
+    <optgroup label="List Type 1">
+        <option value="UL">Unordered List</option>
+        <option value="OL" selected>Ordered List</option>
+        <option value="DL">Description List</option>
+    </optgroup>
+</select>
+
+<select name="HTML List Type Selector Two">
+    <optgroup label="List Type 2">
+        <option value="UL">Unordered List</option>
+        <option value="OL">Ordered List</option>
+        <option value="DL" selected>Description List</option>
+    </optgroup>
+</select>
+</div>
+
+<p><input type="submit"></p>
+
+</form>
+
+<script>
+function multiply(q,p) {
+
+    let result = parseFloat(q.value) * parseFloat(p.value)
+    if (isNaN(result) || result < 1) return ''
+    else return 'Total: $' + result.toFixed(2)
+}
+
+</script>
+
+        </div><!-- /.note-forms -->
+
+        <div class="note-block note-imagemap">
+          <img src="photos/ad.jpg" width="400" height="250" alt="Search" usemap="#search" class="imagemap-img">
+          <map name="search">
+              <area shape="rect" coords="0, 0, 200, 100" href="https://www.facebook.com" alt="Facebook Panel" title="Link to Facebook">
+              <area shape="rect" coords="200, 0, 400, 100" href="https://www.instagram.com" alt="Instagram Panel" title="Link to Instagram">
+              <area shape="rect" coords="0, 100, 200, 200" href="https://www.tiktok.com" alt="Tiktok Panel" title="Link to Tiktok">
+              <area shape="rect" coords="200, 100, 400, 200" href="https://www.spotify.com" alt="Spotify Panel" title="Link to Spotify">
+          </map>
+        </div>
+
+        </div><!-- /.notebook -->
+      </section>
+    </section>
+
+<script>
+(function () {
+
+    const btn = document.getElementById('btn');
+
+    btn.addEventListener('click', function () {
+
+        const myForm = document.getElementById('myForm');
+        const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        const adr = document.getElementById('addr').value;
+
+        if (!pattern.test(adr)) {
+            alert('Invalid Email Address');
+        } else {
+            myForm.submit();
+        }
+
+    });
+
+})();
+</script>
+
+    <!-- =========================================================
+         SHOP VIEW — full catalog with search, filter, sort
+         ========================================================= -->
+    <section class="view" id="view-shop">
+      <div class="view-header">
+        <h1 id="shopTitle">Shop All Bags</h1>
+        <p id="shopMeta">Showing every style.</p>
+      </div>
+      <div class="shop-controls">
+        <p class="shop-active-filter" id="shopActiveFilter"></p>
+        <label class="sort-field">
+          <span>Sort by</span>
+          <select id="sortSelect">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="newest">Newest</option>
+          </select>
+        </label>
+      </div>
+      <div class="product-grid" id="shopGrid"></div>
+      <div class="empty-state" id="shopEmpty" hidden>
+        <p>No bags match your search.</p>
+        <button class="btn btn-primary" id="shopResetBtn">Clear filters</button>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CART VIEW
+         ========================================================= -->
+    <section class="view" id="view-cart">
+      <div class="view-header"><h1>Your Cart</h1></div>
+      <div class="cart-layout" id="cartLayout">
+        <div class="cart-items" id="cartItems"></div>
+        <aside class="summary-card" id="cartSummary">
+          <h2>Order Summary</h2>
+          <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="cartShipping">$0</span></div>
+          <p class="summary-note" id="cartShippingNote"></p>
+          <div class="summary-row summary-total"><span>Total</span><span id="cartTotal">$0</span></div>
+          <button class="btn btn-primary btn-block" id="checkoutBtn">Proceed to Checkout</button>
+          <a href="#shop" class="btn btn-ghost-dark btn-block" data-nav="shop">Continue Shopping</a>
+        </aside>
+      </div>
+      <div class="empty-state" id="cartEmpty" hidden>
+        <p>Your cart is empty.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Start Shopping</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         WISHLIST VIEW
+         ========================================================= -->
+    <section class="view" id="view-wishlist">
+      <div class="view-header"><h1>Your Wishlist</h1></div>
+      <div class="product-grid" id="wishlistGrid"></div>
+      <div class="empty-state" id="wishlistEmpty" hidden>
+        <p>Nothing saved yet. Tap the heart on any bag to save it here.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Browse Bags</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         LOGIN VIEW
+         ========================================================= -->
+    <section class="view" id="view-login">
+      <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="auth-sub">Log in to check out, and view your order history.</p>
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" autocomplete="email" required />
+            <p class="field-error" id="loginEmailError"></p>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password" required />
+            <p class="field-error" id="loginPasswordError"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">
+            <span class="btn-label">Log In</span>
+          </button>
+        </form>
+        <p class="auth-switch">New here? <a href="#register" data-nav="register">Create an account</a></p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         REGISTER VIEW
+         ========================================================= -->
+    <section class="view" id="view-register">
+      <div class="auth-card">
+        <h1>Create your account</h1>
+        <p class="auth-sub">Save a wishlist, check out faster, and track orders.</p>
+        <form id="registerForm" novalidate>
+          <div class="field">
+            <label for="registerName">Full name</label>
+            <input type="text" id="registerName" autocomplete="name" required />
+            <p class="field-error" id="registerNameError"></p>
+          </div>
+          <div class="field">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" autocomplete="email" required />
+            <p class="field-error" id="registerEmailError"></p>
+          </div>
+          <div class="field">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" autocomplete="new-password" required />
+            <p class="field-error" id="registerPasswordError"></p>
+          </div>
+          <div class="field">
+            <label for="registerConfirm">Confirm password</label>
+            <input type="password" id="registerConfirm" autocomplete="new-password" required />
+            <p class="field-error" id="registerConfirmError"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="registerSubmitBtn">
+            <span class="btn-label">Create Account</span>
+          </button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="#login" data-nav="login">Log in</a></p>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         ACCOUNT VIEW
+         ========================================================= -->
+    <section class="view" id="view-account">
+      <div class="view-header"><h1>My Account</h1></div>
+      <div class="account-layout">
+        <div class="account-card" id="accountInfo"></div>
+        <div class="account-actions">
+          <a href="#orders" class="btn btn-ghost-dark btn-block" data-nav="orders">View Order History</a>
+          <button class="btn btn-primary btn-block" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CHECKOUT VIEW — Shipping → Payment → Review
+         ========================================================= -->
+    <section class="view" id="view-checkout">
+      <div class="view-header"><h1>Checkout</h1></div>
+
+      <ol class="step-indicator" id="stepIndicator">
+        <li class="step is-active" data-step="shipping"><span class="step-num">1</span>Shipping</li>
+        <li class="step" data-step="payment"><span class="step-num">2</span>Payment</li>
+        <li class="step" data-step="review"><span class="step-num">3</span>Review</li>
+      </ol>
+
+      <div class="checkout-layout">
+        <div class="checkout-form-area">
+
+          <form class="checkout-step is-active" id="stepShipping" novalidate>
+            <h2>Shipping Information</h2>
+            <div class="field">
+              <label for="shipFullName">Full name</label>
+              <input type="text" id="shipFullName" required />
+              <p class="field-error" id="shipFullNameError"></p>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="shipEmail">Email</label>
+                <input type="email" id="shipEmail" required />
+                <p class="field-error" id="shipEmailError"></p>
+              </div>
+              <div class="field">
+                <label for="shipPhone">Phone</label>
+                <input type="tel" id="shipPhone" required />
+                <p class="field-error" id="shipPhoneError"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="shipAddress">Address</label>
+              <input type="text" id="shipAddress" required />
+              <p class="field-error" id="shipAddressError"></p>
+            </div>
+            <div class="form-row form-row-3">
+              <div class="field">
+                <label for="shipCity">City</label>
+                <input type="text" id="shipCity" required />
+                <p class="field-error" id="shipCityError"></p>
+              </div>
+              <div class="field">
+                <label for="shipState">State / Province</label>
+                <input type="text" id="shipState" required />
+                <p class="field-error" id="shipStateError"></p>
+              </div>
+              <div class="field">
+                <label for="shipZip">Postal code</label>
+                <input type="text" id="shipZip" required />
+                <p class="field-error" id="shipZipError"></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="shipCountry">Country</label>
+              <select id="shipCountry" required>
+                <option value="">Select a country</option>
+                <option>United States</option>
+                <option>Canada</option>
+                <option>United Kingdom</option>
+                <option>Philippines</option>
+                <option>Australia</option>
+                <option>Other</option>
+              </select>
+              <p class="field-error" id="shipCountryError"></p>
+            </div>
+            <div class="checkout-step-actions">
+              <a href="#cart" class="btn btn-ghost-dark" data-nav="cart">Back to Cart</a>
+              <button type="submit" class="btn btn-primary">Continue to Payment</button>
+            </div>
+          </form>
+
+          <form class="checkout-step" id="stepPayment" novalidate>
+            <h2>Payment Method</h2>
+            <div class="payment-options" id="paymentOptions">
+              <label class="payment-option is-active">
+                <input type="radio" name="paymentMethod" value="card" checked />
+                <span class="payment-option-label">Credit / Debit Card</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="paypal" />
+                <span class="payment-option-label">PayPal</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="cod" />
+                <span class="payment-option-label">Cash on Delivery</span>
+              </label>
+            </div>
+
+            <div id="cardFields">
+              <div class="field">
+                <label for="cardName">Name on card</label>
+                <input type="text" id="cardName" />
+                <p class="field-error" id="cardNameError"></p>
+              </div>
+              <div class="field">
+                <label for="cardNumber">Card number</label>
+                <input type="text" id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19" />
+                <p class="field-error" id="cardNumberError"></p>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="cardExpiry">Expiry (MM/YY)</label>
+                  <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" />
+                  <p class="field-error" id="cardExpiryError"></p>
+                </div>
+                <div class="field">
+                  <label for="cardCvc">CVC</label>
+                  <input type="text" id="cardCvc" inputmode="numeric" maxlength="4" />
+                  <p class="field-error" id="cardCvcError"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="checkout-step-actions">
+              <button type="button" class="btn btn-ghost-dark" data-checkout-back="shipping">Back</button>
+              <button type="submit" class="btn btn-primary">Review Order</button>
+            </div>
+          </form>
+
+          <div class="checkout-step" id="stepReview">
+            <h2>Review Your Order</h2>
+            <div id="reviewShipping" class="review-block"></div>
+            <div id="reviewPayment" class="review-block"></div>
+            <div id="reviewItems" class="review-block"></div>
+            <div class="checkout-step-actions">
+              <button type="button" class="btn btn-ghost-dark" data-checkout-back="payment">Back</button>
+              <button type="button" class="btn btn-primary" id="placeOrderBtn">
+                <span class="btn-label">Place Order</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="summary-card" id="checkoutSummary">
+          <h2>Order Summary</h2>
+          <div id="checkoutSummaryItems"></div>
+          <div class="summary-row"><span>Subtotal</span><span id="checkoutSubtotal">$0</span></div>
+          <div class="summary-row"><span>Shipping</span><span id="checkoutShipping">$0</span></div>
+          <div class="summary-row summary-total"><span>Total</span><span id="checkoutTotal">$0</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CONFIRMATION VIEW
+         ========================================================= -->
+    <section class="view" id="view-confirmation">
+      <div class="confirmation-card" id="confirmationContent"></div>
+    </section>
+
+    <!-- =========================================================
+         ORDERS VIEW
+         ========================================================= -->
+    <section class="view" id="view-orders">
+      <div class="view-header"><h1>Order History</h1></div>
+      <div class="orders-list" id="ordersList"></div>
+      <div class="empty-state" id="ordersEmpty" hidden>
+        <p>No orders yet. Once you check out, your orders will appear here.</p>
+        <a href="#shop" class="btn btn-primary" data-nav="shop">Start Shopping</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       FOOTER — minimal
+       ========================================================= -->
+  <footer class="site-footer" id="pageFoot">
+    <div class="footer-inner">
+      <span class="footer-brand">Ginhawá</span>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/" class="icon-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </a>
+        <a href="https://www.pinterest.com/" class="icon-btn" aria-label="Pinterest" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 18c1-3 1.5-5.4 1.5-7a3 3 0 1 1 5.7 1.3c-.4 1.7-1.7 3-3.2 3-.7 0-1.2-.3-1.4-.7"/></svg>
+        </a>
+        <a href="https://www.facebook.com/" class="icon-btn" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 9h2V6h-2a3 3 0 0 0-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9Z"/></svg>
+        </a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Ginhawá. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Floating back-to-top button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <!-- =========================================================
+       PRODUCT QUICK-VIEW MODAL
+       ========================================================= -->
+  <div class="modal-overlay" id="productModal" hidden>
+    <div class="modal product-modal" role="dialog" aria-modal="true" aria-labelledby="modalProductName">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close product details">&times;</button>
+      <div class="modal-body" id="modalBody"><!-- injected by script.js --></div>
+    </div>
+  </div>
+
+  <script src="Script.js"></script>
+</body>
+</html>
