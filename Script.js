@@ -1315,6 +1315,13 @@ function renderConfirmationView(order) {
       <div class="review-item-row"><span>Shipping</span><span>${order.shipping === 0 ? 'Free' : formatPrice(order.shipping)}</span></div>
       <div class="review-item-row" style="font-weight:700;"><span>Total</span><span>${formatPrice(order.total)}</span></div>
     </div>
+    <pre class="ascii-bag" aria-hidden="true">     ____
+    /    \\
+   /______\\
+  |        |
+  | Ginhawá |
+  |_________|</pre>
+    <p class="ascii-bag-caption">Packed with care, just for you.</p>
     <div class="confirmation-actions">
       <a href="#home" class="btn btn-primary">Continue Shopping</a>
       <a href="#orders" class="btn btn-ghost-dark">View Order History</a>
@@ -1783,6 +1790,80 @@ function initShippingInfoText() {
 }
 
 /* ------------------------------------------------------------
+   SECTION 17: "A Moment of Ginhawá" audio chime toggle
+   ------------------------------------------------------------ */
+function initChimeAudio() {
+  const btn = $('#chimeToggle');
+  const audio = $('#chimeAudio');
+  if (!btn || !audio) return;
+  const iconPlay = $('.icon-play', btn);
+  const iconPause = $('.icon-pause', btn);
+
+  btn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play().catch(() => toast('Audio could not be played.', 'error'));
+    } else {
+      audio.pause();
+    }
+  });
+  audio.addEventListener('play', () => {
+    btn.setAttribute('aria-pressed', 'true');
+    btn.setAttribute('aria-label', 'Pause the chime');
+    iconPlay.hidden = true;
+    iconPause.hidden = false;
+  });
+  audio.addEventListener('pause', () => {
+    btn.setAttribute('aria-pressed', 'false');
+    btn.setAttribute('aria-label', 'Play a moment of ginhawá');
+    iconPlay.hidden = false;
+    iconPause.hidden = true;
+  });
+  audio.addEventListener('ended', () => {
+    btn.setAttribute('aria-pressed', 'false');
+    btn.setAttribute('aria-label', 'Play a moment of ginhawá');
+    iconPlay.hidden = false;
+    iconPause.hidden = true;
+  });
+}
+
+/* ------------------------------------------------------------
+   SECTION 18: "Follow the Journey" responsive image map
+   The <area> coords are recalculated from each region's percentage
+   bounds (data-rect) against the image's *current rendered* size,
+   so the clickable regions stay lined up at any screen width.
+   ------------------------------------------------------------ */
+function initFollowMap() {
+  const img = $('#followBannerImg');
+  const areas = $$('#followMap area');
+  if (!img || !areas.length) return;
+
+  function updateAreas() {
+    const w = img.clientWidth;
+    const h = img.clientHeight;
+    if (!w || !h) return;
+    areas.forEach((area) => {
+      const [x1, y1, x2, y2] = area.dataset.rect.split(',').map(Number);
+      const coords = [
+        Math.round((x1 / 100) * w),
+        Math.round((y1 / 100) * h),
+        Math.round((x2 / 100) * w),
+        Math.round((y2 / 100) * h),
+      ];
+      area.coords = coords.join(',');
+    });
+  }
+
+  if (img.complete) updateAreas();
+  img.addEventListener('load', updateAreas);
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateAreas, 120);
+  });
+}
+
+/* ------------------------------------------------------------
    SECTION 14: Init
    ------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1794,6 +1875,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initNewsletterForm();
   initShippingInfoText();
+  initChimeAudio();
+  initFollowMap();
   renderHome();
   renderRoute();
 });

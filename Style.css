@@ -1536,6 +1536,232 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .info-block p { font-size: 14px; color: var(--color-ink-soft); line-height: 1.75; margin: 0; }
 
 /* -------------------------------------------------------------
+   SECTION: About Us extras — ruby language card + audio chime
+   ------------------------------------------------------------- */
+.about-extras {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 88px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.ruby-feature, .audio-chime {
+  padding: 26px 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+.about-extras-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--color-leather);
+  margin: 0 0 18px;
+}
+
+.ruby-feature-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px 32px;
+}
+.ruby-feature-row ruby {
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: var(--color-ink);
+  ruby-position: over;
+  text-align: center;
+}
+.ruby-feature-row rt {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--color-ink-soft);
+  text-transform: none;
+}
+.ruby-feature-row rp { color: var(--color-ink-soft); }
+
+.audio-chime-row { display: flex; align-items: center; gap: 16px; }
+.audio-toggle {
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color .2s var(--ease), transform .15s var(--ease);
+}
+.audio-toggle:hover { background: var(--color-leather); }
+.audio-toggle:active { transform: scale(.96); }
+.audio-toggle svg { width: 20px; height: 20px; }
+.audio-toggle .icon-play { margin-left: 2px; } /* optical centering for the play triangle */
+.audio-chime-sub { font-size: 13px; color: var(--color-ink-soft); line-height: 1.6; margin: 0; }
+
+/* -------------------------------------------------------------
+   SECTION: "Every Ginhawá Bag Includes" feature list
+   ------------------------------------------------------------- */
+.features-list {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 96px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  list-style: none;
+}
+.features-list li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+}
+.features-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-leather);
+}
+
+/* -------------------------------------------------------------
+   SECTION: Compare Bags glossary (dl / dt / dfn / dd)
+   ------------------------------------------------------------- */
+.glossary-wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 40px;
+}
+.glossary-head { padding: 0; margin-bottom: 24px; }
+.glossary-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  grid-auto-columns: 1fr;
+  gap: 24px;
+}
+.glossary-list dt dfn {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  border-bottom: 2px solid var(--color-leather);
+  padding-bottom: 4px;
+}
+.glossary-list dd {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  line-height: 1.65;
+}
+
+/* -------------------------------------------------------------
+   SECTION: FAQ care-steps ordered list
+   ------------------------------------------------------------- */
+.care-steps {
+  margin: 4px 0 18px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.care-steps li { font-size: 14px; color: var(--color-ink-soft); line-height: 1.65; padding-left: 6px; }
+.care-steps li::marker { color: var(--color-leather); font-weight: 700; }
+
+/* -------------------------------------------------------------
+   SECTION: Order confirmation ASCII bag art
+   ------------------------------------------------------------- */
+.ascii-bag {
+  margin: 28px auto 4px;
+  padding: 18px 20px;
+  width: fit-content;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--color-leather);
+  white-space: pre;
+  overflow-x: auto;
+}
+.ascii-bag-caption { text-align: center; font-size: 13px; color: var(--color-ink-soft); margin: 0 0 8px; }
+
+/* -------------------------------------------------------------
+   SECTION: Newsletter subscriber-perk price (del / ins)
+   ------------------------------------------------------------- */
+.newsletter-perk {
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.price-was del { color: var(--color-ink-soft); opacity: .75; text-decoration-color: var(--color-badge); }
+.price-now ins {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--color-leather);
+  margin-left: 4px;
+}
+
+/* -------------------------------------------------------------
+   SECTION: "Follow the Journey" image map banner
+   ------------------------------------------------------------- */
+.follow-banner { padding-bottom: 8px; }
+.follow-map-wrap {
+  position: relative;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.follow-map-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+.follow-map-labels {
+  position: absolute;
+  top: 0; left: 24px; right: 24px; bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  pointer-events: none;
+}
+.follow-map-label {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+}
+.follow-map-label svg {
+  width: 26px; height: 26px;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(28, 22, 18, .55);
+  color: #fff;
+  backdrop-filter: blur(2px);
+  transition: transform .2s var(--ease);
+}
+.follow-map-wrap:hover .follow-map-label svg { transform: translateY(-2px); }
+.follow-map-caption {
+  max-width: var(--max-width);
+  margin: 14px auto 0;
+  padding: 0 24px;
+  font-size: 13px;
+  color: var(--color-ink-soft);
+  text-align: center;
+}
+
+/* -------------------------------------------------------------
    SECTION: Responsive adjustments for the app views
    ------------------------------------------------------------- */
 @media (max-width: 900px) {
@@ -1546,6 +1772,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .about-layout { grid-template-columns: 1fr; gap: 32px; }
   .about-media img { aspect-ratio: 16 / 10; }
   .about-values { grid-template-columns: 1fr 1fr; }
+  .about-extras { grid-template-columns: 1fr; }
+  .follow-map-img { aspect-ratio: 16 / 9; }
 }
 
 @media (max-width: 640px) {
@@ -1557,6 +1785,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .checkout-form-area { padding: 22px; }
   .about-values { grid-template-columns: 1fr; }
   .reviews-summary { gap: 20px; }
+  .features-list { grid-template-columns: 1fr; }
+  .glossary-list { grid-auto-flow: row; grid-template-columns: 1fr; grid-template-rows: none; gap: 22px; }
+  .ruby-feature-row { gap: 18px 26px; }
+  .follow-map-img { aspect-ratio: 4 / 5; }
+  .follow-map-label svg { width: 22px; height: 22px; padding: 7px; }
 
   /* Comparison table: convert rows into stacked label/value cards */
   .compare-table-wrap { overflow-x: visible; }

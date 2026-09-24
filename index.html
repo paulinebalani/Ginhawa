@@ -205,6 +205,37 @@
         </div>
         <div class="product-grid" id="bestSellersGrid"></div>
       </section>
+
+      <section class="section follow-banner" id="follow">
+        <div class="section-head">
+          <h2>Follow the Journey</h2>
+          <p>Behind-the-scenes from the studio, new arrivals first, and the occasional bag-in-progress.</p>
+        </div>
+        <div class="follow-map-wrap">
+          <img src="photos/ad.jpg" alt="Ginhawá leather bags styled in the studio" id="followBannerImg" usemap="#followMap" class="follow-map-img" loading="lazy" />
+          <map name="followMap" id="followMap">
+            <area shape="rect" coords="0,0,300,450" data-rect="0,0,25,100" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" alt="Follow Ginhawá on Facebook" />
+            <area shape="rect" coords="300,0,600,450" data-rect="25,0,50,100" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" alt="Follow Ginhawá on Instagram" />
+            <area shape="rect" coords="600,0,900,450" data-rect="50,0,75,100" href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer" alt="Follow Ginhawá on Pinterest" />
+            <area shape="rect" coords="900,0,1200,450" data-rect="75,0,100,100" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" alt="Subscribe to Ginhawá on YouTube" />
+          </map>
+          <div class="follow-map-labels" aria-hidden="true">
+            <span class="follow-map-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 9h2V6h-2a3 3 0 0 0-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9Z"/></svg>
+            </span>
+            <span class="follow-map-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+            </span>
+            <span class="follow-map-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 18c1-3 1.5-5.4 1.5-7a3 3 0 1 1 5.7 1.3c-.4 1.7-1.7 3-3.2 3-.7 0-1.2-.3-1.4-.7"/></svg>
+            </span>
+            <span class="follow-map-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="6" width="19" height="12" rx="4"/><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
+            </span>
+          </div>
+        </div>
+        <p class="follow-map-caption">Tap a quarter of the photo above — Facebook, Instagram, Pinterest, and YouTube, left to right.</p>
+      </section>
     </section>
 
     <!-- =========================================================
@@ -535,6 +566,38 @@
         </div>
       </div>
 
+      <div class="about-extras">
+        <div class="ruby-feature">
+          <p class="about-extras-label">"Leather Bag," Carried Across Languages</p>
+          <div class="ruby-feature-row">
+            <ruby>
+              <rb>Sac en cuir</rb>
+              <rp> (</rp><rt>sak-ahn-KWEER · French</rt><rp>)</rp>
+            </ruby>
+            <ruby>
+              <rb>Bolso de cuero</rb>
+              <rp> (</rp><rt>BOHL-so deh KWEH-ro · Spanish</rt><rp>)</rp>
+            </ruby>
+            <ruby>
+              <rb>革のバッグ</rb>
+              <rp> (</rp><rt>kawa-no-baggu · Japanese</rt><rp>)</rp>
+            </ruby>
+          </div>
+        </div>
+
+        <div class="audio-chime">
+          <p class="about-extras-label">A Moment of Ginhawá</p>
+          <div class="audio-chime-row">
+            <button type="button" class="audio-toggle" id="chimeToggle" aria-pressed="false" aria-label="Play a moment of ginhawá">
+              <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+            <p class="audio-chime-sub">Press play for a soft music — a small pause before you carry on.</p>
+            <audio id="chimeAudio" src="Thousand years.mp3" preload="none"></audio>
+          </div>
+        </div>
+      </div>
+
       <div class="section-head about-values-head">
         <h2>What We Stand For</h2>
         <p>A few principles that guide every bag we make.</p>
@@ -556,6 +619,18 @@
           <p>A portion of every sale supports the artisan workshops we partner with, and we publish where and how each collection is made.</p>
         </div>
       </div>
+
+      <div class="section-head about-values-head">
+        <h2>Every Ginhawá Bag Includes</h2>
+        <p>The same standard of finish, on every style we make.</p>
+      </div>
+      <ul class="features-list">
+        <li>Full-grain, vegetable-tanned leather that deepens in color with wear</li>
+        <li>Solid brass or matte-black hardware, hand-set and rust-resistant</li>
+        <li>Reinforced stitching at every handle and strap attachment point</li>
+        <li>A cotton dust bag for storage, included with every order</li>
+        <li>A care card with cleaning and conditioning instructions</li>
+      </ul>
     </section>
 
     <!-- =========================================================
@@ -565,6 +640,23 @@
       <div class="view-header">
         <h1>Compare Bag Types</h1>
         <p>Not sure which silhouette fits your day? See how our seven bag types stack up, side by side.</p>
+      </div>
+
+      <div class="glossary-wrap">
+        <div class="section-head glossary-head">
+          <h2>A Quick Glossary</h2>
+          <p>A few terms worth knowing before you compare.</p>
+        </div>
+        <dl class="glossary-list">
+          <dt><dfn>Tote</dfn></dt>
+          <dd>An open-top bag with two parallel handles, prized for its large, easy-access main compartment.</dd>
+
+          <dt><dfn>Crossbody</dfn></dt>
+          <dd>A smaller bag worn on a long strap that crosses the body diagonally, keeping both hands free.</dd>
+
+          <dt><dfn>Clutch</dfn></dt>
+          <dd>A small, handle-free evening bag carried in the hand or tucked under the arm.</dd>
+        </dl>
       </div>
 
       <div class="compare-controls">
@@ -757,7 +849,15 @@
         </details>
         <details class="faq-item">
           <summary>How should I care for my bag?</summary>
-          <p>Wipe leather with a soft, dry cloth and condition every few months. Keep suede away from water and brush regularly. Full care instructions for each bag type are on our <a href="#compare">Compare Bags</a> page.</p>
+          <p>A simple routine keeps any Ginhawá bag looking its best for years:</p>
+          <ol class="care-steps">
+            <li>Empty the bag and wipe down the interior lining with a dry, lint-free cloth.</li>
+            <li>Wipe the exterior leather with a soft, slightly damp cloth to lift dust and surface dirt.</li>
+            <li>Let the bag air-dry fully, away from direct heat or sunlight, before using it again.</li>
+            <li>Apply a leather conditioner every 3–6 months to prevent cracking and keep the grain supple.</li>
+            <li>Store it stuffed with tissue paper in its dust bag when not in use, to help it hold its shape.</li>
+          </ol>
+          <p>Full, type-specific care tips are on our <a href="#compare">Compare Bags</a> page.</p>
         </details>
         <details class="faq-item">
           <summary>What payment methods do you accept?</summary>
@@ -940,6 +1040,11 @@
       <div class="footer-col footer-newsletter-col">
         <h3>Stay in the Loop</h3>
         <p>New arrivals and quiet-luxury edits, once or twice a month.</p>
+        <p class="newsletter-perk">
+          Subscribers save on their first order — try it on the Marlow Everyday Tote:
+          <span class="price-was"><span class="sr-only">Original price </span><del>₱2320</del></span>
+          <span class="price-now"><span class="sr-only">Subscriber price </span><ins>₱1972</ins></span>
+        </p>
         <form class="newsletter-form" id="newsletterForm" novalidate>
           <label class="sr-only" for="newsletterEmail">Email address</label>
           <input type="email" id="newsletterEmail" placeholder="Your email address" required />
