@@ -1864,6 +1864,88 @@ function initFollowMap() {
 }
 
 /* ------------------------------------------------------------
+   SECTION 19: Bag Care & Storage Guide — expand/collapse toggles
+   Each panel (PDF or video) has one toggle button that grows the
+   embedded iframe taller and swaps its icon + aria-expanded state.
+   ------------------------------------------------------------ */
+function initCareGuide() {
+  $$('.care-guide-toggle').forEach((btn) => {
+    const panel = document.getElementById(btn.dataset.target);
+    if (!panel) return;
+    const iconExpand = $('.icon-expand', btn);
+    const iconCollapse = $('.icon-collapse', btn);
+
+    btn.addEventListener('click', () => {
+      const isExpanded = panel.classList.toggle('is-expanded');
+      btn.setAttribute('aria-expanded', String(isExpanded));
+      if (iconExpand) iconExpand.hidden = isExpanded;
+      if (iconCollapse) iconCollapse.hidden = !isExpanded;
+      if (isExpanded) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+}
+
+/* ------------------------------------------------------------
+   SECTION 20: Search datalist — autocomplete suggestions
+   Populates the header search <datalist> from the live product
+   database, so suggestions stay in sync with SECTION 1 above.
+   ------------------------------------------------------------ */
+function initSearchDatalist() {
+  const list = $('#searchSuggestions');
+  if (!list) return;
+  const names = PRODUCTS.map((p) => p.name);
+  const categories = PRODUCTS.map((p) => p.category);
+  const brands = PRODUCTS.map((p) => p.brand);
+  const options = Array.from(new Set([...categories, ...brands, ...names]));
+  list.innerHTML = options.map((o) => `<option value="${escapeHtml(o)}"></option>`).join('');
+}
+
+/* ------------------------------------------------------------
+   SECTION 21: Care video — autoplay on open + play/pause toggle
+   The video panel's iframe uses srcdoc, so its <video> is same-
+   origin and fully scriptable. Every time the page (or the
+   iframe) loads, the video starts playing (muted, as browsers
+   require for autoplay); the button lets the visitor pause or
+   resume it, with the icon swapping to reflect the current state.
+   ------------------------------------------------------------ */
+function initCareVideoPlayback() {
+  const btn = $('#careVideoPlayToggle');
+  const frame = $('#careVideoFrame');
+  if (!btn || !frame) return;
+  const iconPlay = $('.icon-play', btn);
+  const iconPause = $('.icon-pause', btn);
+
+  function syncButton(video) {
+    const playing = !video.paused && !video.ended;
+    btn.setAttribute('aria-pressed', String(playing));
+    btn.setAttribute('aria-label', playing ? 'Pause the care video' : 'Play the care video');
+    if (iconPlay) iconPlay.hidden = playing;
+    if (iconPause) iconPause.hidden = !playing;
+  }
+
+  function wireVideo() {
+    let video = null;
+    try { video = frame.contentDocument && frame.contentDocument.getElementById('careVideo'); }
+    catch (err) { video = null; }
+    if (!video) { btn.disabled = true; return; }
+
+    video.play().catch(() => {}); // autoplay every time the site/panel loads
+    syncButton(video);
+    video.addEventListener('play', () => syncButton(video));
+    video.addEventListener('pause', () => syncButton(video));
+    video.addEventListener('ended', () => syncButton(video));
+
+    btn.onclick = () => {
+      if (video.paused || video.ended) video.play().catch(() => {});
+      else video.pause();
+    };
+  }
+
+  if (frame.contentDocument && frame.contentDocument.readyState === 'complete') wireVideo();
+  frame.addEventListener('load', wireVideo);
+}
+
+/* ------------------------------------------------------------
    SECTION 14: Init
    ------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1877,6 +1959,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initShippingInfoText();
   initChimeAudio();
   initFollowMap();
+  initCareGuide();
+  initCareVideoPlayback();
+  initSearchDatalist();
   renderHome();
   renderRoute();
 });

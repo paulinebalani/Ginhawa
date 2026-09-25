@@ -118,6 +118,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .icon-btn .badge:empty,
 .icon-btn .badge[data-zero] { display: none; }
 
+/* Smaller icon-button variant, used in compact card/panel headers */
+.icon-btn-sm { width: 32px; height: 32px; }
+.icon-btn-sm svg { width: 16px; height: 16px; }
+
 /* extra breathing room around the search icon, per brief */
 .search-gap { margin-right: 18px; }
 
@@ -530,8 +534,34 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 .product-brand { font-size: 12px; color: var(--color-ink-soft); margin: 0 0 2px; }
 .product-name { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
-.product-price { font-size: 15px; color: var(--color-leather); font-weight: 600; margin: 0; }
+.product-price { font-size: 15px; color: var(--color-leather); font-weight: 700; letter-spacing: .01em; margin: 0; }
 .product-price .was { color: var(--color-ink-soft); font-weight: 500; text-decoration: line-through; margin-right: 6px; }
+
+/* -------------------------------------------------------------
+   SECTION: Subtle price / offer highlight utilities
+   Used to draw the eye to prices, discounts, and free-shipping
+   offers wherever they appear in running copy, without shouting.
+   ------------------------------------------------------------- */
+.price-highlight {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(156, 107, 62, .1);
+  color: var(--color-leather-dark);
+  font-weight: 700;
+  letter-spacing: .01em;
+  white-space: nowrap;
+}
+.offer-highlight {
+  color: var(--color-leather-dark);
+  font-weight: 600;
+}
+/* Price ranges in the Compare Bags table — highlighted via the
+   existing data-label attribute, no markup changes required */
+.compare-table td[data-label="Price Range"] {
+  color: var(--color-leather-dark);
+  font-weight: 700;
+}
 
 /* -------------------------------------------------------------
    SECTION: Category grid (Popular Categories)
@@ -1536,6 +1566,68 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .info-block p { font-size: 14px; color: var(--color-ink-soft); line-height: 1.75; margin: 0; }
 
 /* -------------------------------------------------------------
+   SECTION: Bag Care & Storage Guide — PDF + video panels
+   Side-by-side on desktop, stacked on mobile (see breakpoint
+   below). Each panel can be expanded taller via its toggle
+   button, and downloaded via its download button.
+   ------------------------------------------------------------- */
+.care-guide-media {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px 88px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.care-guide-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.care-guide-item-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--color-line);
+}
+.care-guide-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-muted);
+  color: var(--color-leather);
+}
+.care-guide-icon svg { width: 19px; height: 19px; }
+.care-guide-item-title { flex: 1; min-width: 0; }
+.care-guide-item-title h3 { font-size: 15px; font-weight: 600; margin: 0; }
+.care-guide-item-title p { font-size: 12px; color: var(--color-ink-soft); margin: 2px 0 0; }
+.care-guide-item-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.care-guide-toggle[aria-expanded="true"] { background: var(--color-surface-muted); color: var(--color-leather); }
+
+.care-guide-frame {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  background: var(--color-surface-muted);
+  transition: height .3s var(--ease);
+}
+.care-guide-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.care-guide-item.is-expanded .care-guide-frame { height: 640px; }
+
+/* -------------------------------------------------------------
    SECTION: About Us extras — ruby language card + audio chime
    ------------------------------------------------------------- */
 .about-extras {
@@ -1773,6 +1865,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .about-media img { aspect-ratio: 16 / 10; }
   .about-values { grid-template-columns: 1fr 1fr; }
   .about-extras { grid-template-columns: 1fr; }
+  .care-guide-media { grid-template-columns: 1fr; }
+  .care-guide-frame { height: 300px; }
+  .care-guide-item.is-expanded .care-guide-frame { height: 480px; }
   .follow-map-img { aspect-ratio: 16 / 9; }
 }
 

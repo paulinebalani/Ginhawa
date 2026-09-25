@@ -63,7 +63,8 @@
     <div class="search-bar" id="searchBar">
       <div class="search-bar-inner">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
+        <input type="text" id="searchInput" list="searchSuggestions" autocomplete="off" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
+        <datalist id="searchSuggestions"></datalist>
         <button class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
       </div>
       <p class="search-hint" id="searchHint"></p>
@@ -177,6 +178,43 @@
         <div class="category-grid" id="categoryGrid"></div>
       </section>
 
+      <section class="section" id="about-us">
+        <div class="section-head">
+          <h2>About Ginhawá</h2>
+          <p>Full-grain leather bags, hand-finished in small batches — carried and named across languages, one shape at a time.</p>
+        </div>
+        <div class="category-grid">
+          <a href="#shop" class="category-card">
+            <img src="photos/backpack.jpg" alt="Backpack bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Backpack</rb><rt>Rucksack</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/tote.jpg" alt="Tote bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Tote</rb><rt>Cabas</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/crossbody.jpg" alt="Crossbody bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Crossbody</rb><rt>Bandolera</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/clutch.jpg" alt="Clutch bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Clutch</rb><rt>Pochette</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/satchel.jpg" alt="Satchel bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Satchel</rb><rt>Sacola</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/hobo.jpg" alt="Hobo bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Hobo</rb><rt>호보백</rt></ruby></span>
+          </a>
+          <a href="#shop" class="category-card">
+            <img src="photos/duffel.jpg" alt="Duffel bags" loading="lazy" />
+            <span class="category-card-label"><ruby><rb>Duffel</rb><rt>ダッフルバッグ</rt></ruby></span>
+          </a>
+        </div>
+      </section>
+
       <section class="section" id="new-arrivals">
         <div class="section-head">
           <h2>New Arrivals</h2>
@@ -184,6 +222,7 @@
         </div>
         <div class="product-grid" id="newArrivalsGrid"></div>
       </section>
+
 
       <span id="lifestyle-anchor"></span>
       <section class="lifestyle" id="lifestyle">
@@ -419,7 +458,19 @@
             <div class="form-row form-row-3">
               <div class="field">
                 <label for="shipCity">City</label>
-                <input type="text" id="shipCity" required />
+                <input type="text" id="shipCity" list="cityOptions" autocomplete="off" required />
+                <datalist id="cityOptions">
+                  <option value="Makati City"></option>
+                  <option value="Quezon City"></option>
+                  <option value="Manila"></option>
+                  <option value="Cebu City"></option>
+                  <option value="Davao City"></option>
+                  <option value="New York"></option>
+                  <option value="Los Angeles"></option>
+                  <option value="London"></option>
+                  <option value="Sydney"></option>
+                  <option value="Toronto"></option>
+                </datalist>
                 <p class="field-error" id="shipCityError"></p>
               </div>
               <div class="field">
@@ -618,6 +669,66 @@
           <h3>Community</h3>
           <p>A portion of every sale supports the artisan workshops we partner with, and we publish where and how each collection is made.</p>
         </div>
+      </div>
+
+      <div class="section-head about-values-head">
+        <h2>Bag Care &amp; Storage Guide</h2>
+        <p>Read the full guide or watch a short walkthrough — everything you need to keep a Ginhawá bag looking its best.</p>
+      </div>
+      <div class="care-guide-media">
+
+        <article class="care-guide-item" id="careGuidePdfItem">
+          <div class="care-guide-item-head">
+            <span class="care-guide-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13.5h6M9 17h6M9 10h2"/></svg>
+            </span>
+            <div class="care-guide-item-title">
+              <h3>Storage Guide</h3>
+              <p>PDF guide</p>
+            </div>
+            <div class="care-guide-item-actions">
+              <button type="button" class="icon-btn icon-btn-sm care-guide-toggle" data-target="careGuidePdfItem" aria-expanded="false" aria-label="Expand the storage guide">
+                <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+                <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" hidden><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
+              </button>
+              <a class="icon-btn icon-btn-sm" href="bagpdf.pdf" download aria-label="Download the storage guide PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="care-guide-frame">
+            <iframe src="bagpdf.pdf" title="Ginhawá Bag Storage Guide (PDF)" loading="lazy"></iframe>
+          </div>
+        </article>
+
+        <article class="care-guide-item" id="careGuideVideoItem">
+          <div class="care-guide-item-head">
+            <span class="care-guide-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10.5 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/></svg>
+            </span>
+            <div class="care-guide-item-title">
+              <h3>Care Walkthrough</h3>
+              <p>Video guide</p>
+            </div>
+            <div class="care-guide-item-actions">
+              <button type="button" class="icon-btn icon-btn-sm care-guide-video-toggle" id="careVideoPlayToggle" aria-pressed="true" aria-label="Pause the care video">
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" hidden><path d="M8 5v14l11-7z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+              </button>
+              <button type="button" class="icon-btn icon-btn-sm care-guide-toggle" data-target="careGuideVideoItem" aria-expanded="false" aria-label="Expand the care video">
+                <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+                <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" hidden><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
+              </button>
+              <a class="icon-btn icon-btn-sm" href="bagvid.mp4" download aria-label="Download the care video">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="care-guide-frame">
+            <iframe id="careVideoFrame" title="Ginhawá Bag Care Video" loading="lazy" allow="autoplay" srcdoc="&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;style&gt;html,body{margin:0;height:100%;background:#000;}video{width:100%;height:100%;display:block;object-fit:contain;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;video id=&quot;careVideo&quot; src=&quot;bagvid.mp4&quot; muted autoplay loop playsinline controls&gt;&lt;/video&gt;&lt;/body&gt;&lt;/html&gt;"></iframe>
+          </div>
+        </article>
+
       </div>
 
       <div class="section-head about-values-head">
@@ -941,7 +1052,7 @@
         </section>
         <section class="info-block">
           <h2>Domestic Shipping</h2>
-          <p>Standard domestic shipping is a flat <span id="shippingFlatRateText">$12</span>, and free on orders over <span id="freeShippingThresholdText">$150</span>. Most domestic orders arrive within 3–5 business days of shipping.</p>
+          <p>Standard domestic shipping is a flat <span id="shippingFlatRateText" class="price-highlight">$12</span>, and <span class="offer-highlight">free on orders over</span> <span id="freeShippingThresholdText" class="price-highlight">$150</span>. Most domestic orders arrive within 3–5 business days of shipping.</p>
         </section>
         <section class="info-block">
           <h2>International Shipping</h2>
@@ -1041,7 +1152,7 @@
         <h3>Stay in the Loop</h3>
         <p>New arrivals and quiet-luxury edits, once or twice a month.</p>
         <p class="newsletter-perk">
-          Subscribers save on their first order — try it on the Marlow Everyday Tote:
+          Subscribers <span class="offer-highlight">save on their first order</span> — try it on the Marlow Everyday Tote:
           <span class="price-was"><span class="sr-only">Original price </span><del>₱2320</del></span>
           <span class="price-now"><span class="sr-only">Subscriber price </span><ins>₱1972</ins></span>
         </p>
