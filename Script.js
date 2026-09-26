@@ -187,13 +187,13 @@ const PRODUCTS = [
 
 // One representative image per category, for the homepage "Popular Categories" tiles
 const CATEGORY_TILES = [
-  { name: 'Backpack', img: IMAGE_POOL[11] },
-  { name: 'Tote', img: IMAGE_POOL[12] },
-  { name: 'Crossbody', img: IMAGE_POOL[7] },
-  { name: 'Clutch', img: IMAGE_POOL[9] },
+  { name: 'Backpack', img: IMAGE_POOL[1] },
+  { name: 'Tote', img: IMAGE_POOL[0] },
+  { name: 'Crossbody', img: IMAGE_POOL[2] },
+  { name: 'Clutch', img: IMAGE_POOL[4] },
   { name: 'Satchel', img: IMAGE_POOL[3] },
   { name: 'Hobo', img: IMAGE_POOL[6] },
-  { name: 'Duffel', img: IMAGE_POOL[10] },
+  { name: 'Duffel', img: IMAGE_POOL[14] },
 ];
 
 function getProductById(id) {

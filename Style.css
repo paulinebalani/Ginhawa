@@ -1916,3 +1916,70 @@ a:focus-visible, button:focus-visible, input:focus-visible {
     color: var(--color-ink);
   }
 }
+/* -------------------------------------------------------------
+   SECTION: Promo marquee (scrolling announcement banner)
+   Sits above the header; scrolls away with the page while the
+   header stays sticky beneath it.
+   ------------------------------------------------------------- */
+.promo-marquee {
+  position: relative;
+  overflow: hidden;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, var(--color-espresso), #3B2A1E 50%, var(--color-espresso));
+  border-bottom: 1px solid rgba(216, 185, 138, 0.18);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+}
+
+.promo-marquee-track-wrap {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: max-content;
+  padding-left: 32px;
+  animation: promo-marquee-scroll 26s linear infinite;
+  will-change: transform;
+}
+
+.promo-marquee:hover .promo-marquee-track-wrap,
+.promo-marquee:focus-within .promo-marquee-track-wrap {
+  animation-play-state: paused;
+}
+
+.promo-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
+}
+
+.promo-marquee-item {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--color-camel);
+  white-space: nowrap;
+}
+
+.promo-marquee-sep {
+  font-size: 10px;
+  color: var(--color-leather);
+  opacity: .85;
+}
+
+@keyframes promo-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 640px) {
+  .promo-marquee { height: 34px; }
+  .promo-marquee-track-wrap,
+  .promo-marquee-track { gap: 22px; }
+  .promo-marquee-track-wrap { padding-left: 22px; animation-duration: 20s; }
+  .promo-marquee-item { font-size: 11px; letter-spacing: .07em; }
+}
