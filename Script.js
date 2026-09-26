@@ -328,6 +328,18 @@ const saveStock = () => {
    ------------------------------------------------------------ */
 const SHIPPING_FLAT = 12;
 const FREE_SHIPPING_THRESHOLD = 150;
+const EXPRESS_SHIPPING_RATE = 25;
+
+// Which shipping method is currently selected at checkout ('standard' or
+// 'express'). Defaults to 'standard', which reproduces the previous
+// flat-rate / free-over-threshold behavior exactly.
+let selectedShippingMethod = 'standard';
+
+function computeShippingCost(subtotal, itemCount, method) {
+  if (itemCount === 0) return 0;
+  if (method === 'express') return EXPRESS_SHIPPING_RATE;
+  return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT;
+}
 
 function getCartQtyForProduct(productId) {
   return state.cart
@@ -494,7 +506,7 @@ function selectedCartTotals() {
   const items = getSelectedCartLines();
   const subtotal = items.reduce((sum, l) => sum + l.product.price * l.qty, 0);
   const itemCount = items.reduce((sum, l) => sum + l.qty, 0);
-  const shipping = itemCount === 0 ? 0 : (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT);
+  const shipping = computeShippingCost(subtotal, itemCount, selectedShippingMethod);
   const total = subtotal + shipping;
   return { items, subtotal, shipping, total, itemCount };
 }
@@ -733,14 +745,25 @@ function renderModalBody() {
       <p class="modal-description">${p.description}</p>
       <div class="modal-option-group">
         <span>Color — ${modalState.color}</span>
-        <div class="swatches" id="modalColors">
-          ${p.colors.map((c) => `<button class="swatch ${c.name === modalState.color ? 'is-active' : ''}" data-color="${c.name}" style="background:${c.hex}" type="button" aria-label="${c.name}"></button>`).join('')}
+        <div class="option-radio-list" id="modalColors" role="radiogroup" aria-label="Color">
+          ${p.colors.map((c) => `
+            <label class="option-radio ${c.name === modalState.color ? 'is-active' : ''}">
+              <input type="radio" name="modalColor" value="${c.name}" ${c.name === modalState.color ? 'checked' : ''} />
+              <span class="option-radio-swatch" style="background:${c.hex}" aria-hidden="true"></span>
+              <span class="option-radio-label">${c.name}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
       <div class="modal-option-group">
         <span>Size</span>
-        <div class="size-options" id="modalSizes">
-          ${p.sizes.map((s) => `<button class="size-pill ${s === modalState.size ? 'is-active' : ''}" data-size="${s}" type="button">${s}</button>`).join('')}
+        <div class="option-radio-list" id="modalSizes" role="radiogroup" aria-label="Size">
+          ${p.sizes.map((s) => `
+            <label class="option-radio ${s === modalState.size ? 'is-active' : ''}">
+              <input type="radio" name="modalSize" value="${s}" ${s === modalState.size ? 'checked' : ''} />
+              <span class="option-radio-label">${s}</span>
+            </label>
+          `).join('')}
         </div>
       </div>
       <div class="modal-qty-row">
@@ -764,16 +787,16 @@ function renderModalBody() {
     modalState.imgIndex = Number(btn.dataset.idx);
     renderModalBody();
   });
-  $('#modalColors', body).addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-color]');
-    if (!btn) return;
-    modalState.color = btn.dataset.color;
+  $('#modalColors', body).addEventListener('change', (e) => {
+    const input = e.target.closest('input[name="modalColor"]');
+    if (!input) return;
+    modalState.color = input.value;
     renderModalBody();
   });
-  $('#modalSizes', body).addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-size]');
-    if (!btn) return;
-    modalState.size = btn.dataset.size;
+  $('#modalSizes', body).addEventListener('change', (e) => {
+    const input = e.target.closest('input[name="modalSize"]');
+    if (!input) return;
+    modalState.size = input.value;
     renderModalBody();
   });
 
@@ -1109,7 +1132,21 @@ function renderCheckoutEntry() {
   }
   prefillCheckoutForms();
   renderCheckoutSummary();
+  updateShippingOptionPrices();
   showCheckoutStep(checkoutStep);
+}
+
+// Keeps the per-method price shown next to each Shipping Method radio in
+// sync with the current cart subtotal (e.g. "Free" once the free-shipping
+// threshold is reached on Standard, while Express always shows its flat rate).
+function updateShippingOptionPrices() {
+  const { subtotal, itemCount } = selectedCartTotals();
+  const standardCost = computeShippingCost(subtotal, itemCount, 'standard');
+  const expressCost = computeShippingCost(subtotal, itemCount, 'express');
+  const stdEl = $('#shipStandardPrice');
+  const expEl = $('#shipExpressPrice');
+  if (stdEl) stdEl.textContent = standardCost === 0 ? 'Free' : formatPrice(standardCost);
+  if (expEl) expEl.textContent = formatPrice(expressCost);
 }
 
 function prefillCheckoutForms() {
@@ -1156,6 +1193,7 @@ function validateShippingForm() {
     shipState: $('#shipState').value.trim(),
     shipZip: $('#shipZip').value.trim(),
     shipCountry: $('#shipCountry').value,
+    shippingMethod: $('input[name="shippingMethod"]:checked').value,
   };
   let ok = true;
   Object.keys(fields).forEach((id) => setFieldError(id, ''));
@@ -1206,10 +1244,15 @@ function renderReviewStep() {
   const p = checkoutData.payment;
   const { items, subtotal, shipping, total } = selectedCartTotals();
 
+  const shippingMethodLabel = s.shippingMethod === 'express'
+    ? 'Express Shipping (1–2 business days)'
+    : 'Standard Shipping (3–5 business days)';
+
   $('#reviewShipping').innerHTML = `
     <h3>Shipping To</h3>
     <p>${s.shipFullName}<br>${s.shipAddress}<br>${s.shipCity}, ${s.shipState} ${s.shipZip}<br>${s.shipCountry}</p>
     <p>${s.shipEmail} · ${s.shipPhone}</p>
+    <p>${shippingMethodLabel}</p>
   `;
 
   const paymentLabel = p.method === 'card'
@@ -1489,6 +1532,19 @@ function initHeaderAndGlobalEvents() {
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !$('#productModal').hidden) closeProductModal();
+
+    // Checkout flow: on the final Review step there's no <form> to submit,
+    // so pressing Enter wouldn't otherwise do anything. Make it behave like
+    // clicking "Place Order". (On the earlier Shipping/Payment steps, Enter
+    // already submits those forms natively via their submit buttons.)
+    if (e.key === 'Enter' && e.target.tagName.toLowerCase() !== 'textarea') {
+      const checkoutView = $('#view-checkout');
+      if (checkoutView && checkoutView.classList.contains('is-active') && checkoutStep === 'review') {
+        e.preventDefault();
+        const placeOrderBtn = $('#placeOrderBtn');
+        if (placeOrderBtn && !placeOrderBtn.disabled) placeOrder();
+      }
+    }
   });
 
   // Auth forms
@@ -1536,6 +1592,15 @@ function initHeaderAndGlobalEvents() {
     e.preventDefault();
     if (validateShippingForm()) showCheckoutStep('payment');
     else toast('Please fix the highlighted fields.', 'error');
+  });
+
+  // Checkout — shipping method
+  $$('input[name="shippingMethod"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      $$('#shippingOptions .payment-option').forEach((label) => label.classList.toggle('is-active', label.querySelector('input').checked));
+      selectedShippingMethod = $('input[name="shippingMethod"]:checked').value;
+      renderCheckoutSummary();
+    });
   });
 
   // Checkout — payment step

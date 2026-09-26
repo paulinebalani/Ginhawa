@@ -556,6 +556,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   color: var(--color-leather-dark);
   font-weight: 600;
 }
+/* Colored background highlight for important words in running copy —
+   a soft camel wash rather than a hard pill, so it reads like a
+   highlighter mark instead of a badge/label. */
+.text-highlight {
+  background: rgba(216, 185, 138, .45);
+  padding: .05em .32em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 /* Price ranges in the Compare Bags table — highlighted via the
    existing data-label attribute, no markup changes required */
 .compare-table td[data-label="Price Range"] {
@@ -1322,6 +1332,42 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-weight: 500;
 }
 .size-pill.is-active { background: var(--color-ink); color: #fff; border-color: var(--color-ink); }
+
+/* Accessible radio-button variant of the option pickers above — used for
+   Color and Size in the quick-view modal so each choice is a real,
+   selectable radio input (keyboard- and screen-reader-friendly), styled
+   to match the Payment Method options already used at checkout. */
+.option-radio-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.option-radio {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.option-radio:hover { border-color: var(--color-leather); }
+.option-radio.is-active { border-color: var(--color-ink); background: var(--color-surface-muted); }
+.option-radio input[type="radio"] { margin: 0; accent-color: var(--color-leather); flex-shrink: 0; }
+.option-radio-swatch {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--color-line);
+  flex-shrink: 0;
+}
+.option-radio-label { white-space: nowrap; }
+
+/* Shipping Method options at checkout — same visual language as
+   Payment Method, with a right-aligned price/eta. */
+.shipping-option-meta {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+}
 
 .modal-qty-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .modal-qty-row > span { font-size: 13px; font-weight: 600; }

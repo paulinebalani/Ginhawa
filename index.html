@@ -145,7 +145,7 @@
             <div class="hero-content">
               <p class="hero-kicker">The Autumn Edit</p>
               <h1>Carry it with quiet confidence</h1>
-              <p class="hero-copy">Full-grain leather, hand-finished hardware, and silhouettes built to outlast the season.</p>
+              <p class="hero-copy"><span class="text-highlight">Full-grain leather</span>, hand-finished hardware, and silhouettes built to outlast the season.</p>
               <div class="hero-actions">
                 <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
                 <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
@@ -158,7 +158,7 @@
             <div class="hero-content">
               <p class="hero-kicker">Everyday Carry</p>
               <h1>Backpacks made for motion</h1>
-              <p class="hero-copy">Padded, weatherproof, and cut for city commutes or weekend trails.</p>
+              <p class="hero-copy">Padded, <span class="text-highlight">weatherproof</span>, and cut for city commutes or weekend trails.</p>
               <div class="hero-actions">
                 <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
                 <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
@@ -171,7 +171,7 @@
             <div class="hero-content">
               <p class="hero-kicker">Weekend Away</p>
               <h1>Travel light, arrive elegant</h1>
-              <p class="hero-copy">Duffels and totes roomy enough for a long weekend, light enough to forget you're carrying them.</p>
+              <p class="hero-copy">Duffels and totes <span class="text-highlight">roomy enough for a long weekend</span>, light enough to forget you're carrying them.</p>
               <div class="hero-actions">
                 <a href="#shop" class="btn btn-primary" data-nav="shop">Explore Collection</a>
                 <a href="#lifestyle-anchor" class="btn btn-ghost">Discover More</a>
@@ -487,6 +487,21 @@
               </select>
               <p class="field-error" id="shipCountryError"></p>
             </div>
+            <div class="field">
+              <label>Shipping Method</label>
+              <div class="payment-options" id="shippingOptions">
+                <label class="payment-option is-active">
+                  <input type="radio" name="shippingMethod" value="standard" checked />
+                  <span class="payment-option-label">Standard Shipping <span style="font-weight:500;color:var(--color-ink-soft);">— 3–5 business days</span></span>
+                  <span class="shipping-option-meta" id="shipStandardPrice">$12</span>
+                </label>
+                <label class="payment-option">
+                  <input type="radio" name="shippingMethod" value="express" />
+                  <span class="payment-option-label">Express Shipping <span style="font-weight:500;color:var(--color-ink-soft);">— 1–2 business days</span></span>
+                  <span class="shipping-option-meta" id="shipExpressPrice">$25</span>
+                </label>
+              </div>
+            </div>
             <div class="checkout-step-actions">
               <a href="#cart" class="btn btn-ghost-dark" data-nav="cart">Back to Cart</a>
               <button type="submit" class="btn btn-primary">Continue to Payment</button>
@@ -642,17 +657,17 @@
         <div class="value-card">
           <span class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3l-9 9 3 3 9-9-3-3Z"/><path d="M3 21l3.5-1 8-8-2.5-2.5-8 8L3 21Z"/></svg></span>
           <h3>Craftsmanship</h3>
-          <p>Full-grain leather, hand-set hardware, and reinforced stitching at every stress point — details you feel for years, not just on day one.</p>
+          <p><span class="text-highlight">Full-grain leather</span>, hand-set hardware, and reinforced stitching at every stress point — details you feel for years, not just on day one.</p>
         </div>
         <div class="value-card">
           <span class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c4 3 7 6 7 10a7 7 0 1 1-14 0c0-4 3-7 7-10Z"/></svg></span>
           <h3>Responsible Sourcing</h3>
-          <p>We work with tanneries and mills that meet independent environmental standards, and we design every bag to be repaired, not replaced.</p>
+          <p>We work with tanneries and mills that meet independent environmental standards, and we design every bag to be <span class="text-highlight">repaired, not replaced</span>.</p>
         </div>
         <div class="value-card">
           <span class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/></svg></span>
           <h3>Community</h3>
-          <p>A portion of every sale supports the artisan workshops we partner with, and we publish where and how each collection is made.</p>
+          <p>A portion of every sale <span class="text-highlight">supports the artisan workshops</span> we partner with, and we publish where and how each collection is made.</p>
         </div>
       </div>
 
@@ -721,7 +736,7 @@
         <p>The same standard of finish, on every style we make.</p>
       </div>
       <ul class="features-list">
-        <li>Full-grain, vegetable-tanned leather that deepens in color with wear</li>
+        <li><span class="text-highlight">Full-grain, vegetable-tanned leather</span> that deepens in color with wear</li>
         <li>Solid brass or matte-black hardware, hand-set and rust-resistant</li>
         <li>Reinforced stitching at every handle and strap attachment point</li>
         <li>A cotton dust bag for storage, included with every order</li>
@@ -929,11 +944,11 @@
       <div class="faq-list">
         <details class="faq-item">
           <summary>How long does shipping take?</summary>
-          <p>Domestic orders arrive in 3–5 business days after processing. International orders typically take 7–14 business days, depending on destination and customs processing. You'll receive a tracking link as soon as your order ships.</p>
+          <p>Domestic orders arrive in <span class="text-highlight">3–5 business days</span> after processing. International orders typically take 7–14 business days, depending on destination and customs processing. You'll receive a tracking link as soon as your order ships.</p>
         </details>
         <details class="faq-item">
           <summary>What is your return policy?</summary>
-          <p>We accept returns within 30 days of delivery for unused items in original condition and packaging. See our full <a href="#returns">Return &amp; Refund Policy</a> for details on how to start a return.</p>
+          <p>We accept returns within <span class="text-highlight">30 days of delivery</span> for unused items in original condition and packaging. See our full <a href="#returns">Return &amp; Refund Policy</a> for details on how to start a return.</p>
         </details>
         <details class="faq-item">
           <summary>How do I know which size or style to choose?</summary>
