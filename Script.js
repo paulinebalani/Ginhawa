@@ -28,21 +28,21 @@
 // A pool of real bag/leather-goods photos. Each product picks
 // three of these (by index) to simulate a multi-angle gallery.
 const IMAGE_POOL = [
-  'photos/tote.jpg',
-  'photos/backpack.jpg',
-  'photos/crossbody.jpg',
-  'photos/satchel.jpg',
-  'photos/clutch.jpg',
-  'photos/duffel.jpg',
-  'photos/hobo.jpg',
-  'https://images.unsplash.com/photo-1614179689702-355944cd0918?auto=format&fit=crop&w=900&q=80',
-  'photos/tote.jpg',
-  'https://images.unsplash.com/photo-1575032617751-6ddec2089882?auto=format&fit=crop&w=900&q=80',
-  'photos/satchel.jpg',
-  'photos/duffel.jpg',
-  'photos/hobo.jpg',
-  'photos/hobo.jpg',
-  'photos/duffel.jpg',
+  'photos/toterbgcat.png',
+  'photos/backpackrbgcat.png',
+  'photos/crossbodyrbgcat.png',
+  'photos/satchelrbgcat.png',
+  'photos/clutchrbgcat.png',
+  'photos/dufrbg.png',
+  'photos/hoborbgcat.png',
+  'photos/daypackrbg.png',
+  'photos/toterbg1.png',
+  'photos/saddlerbg1.png',
+  'photos/satchelrbg1.png',
+  'photos/dufrbg2.png',
+  'hobo',
+  'hobo',
+  'photos/dufrbgcat.png',
 ];
 
 function pickImages(seedIndex) {
