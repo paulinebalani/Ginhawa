@@ -25,8 +25,8 @@
    Add or edit products here — every view reads from this array.
    ------------------------------------------------------------ */
 
-// A pool of real bag/leather-goods photos. Each product picks
-// three of these (by index) to simulate a multi-angle gallery.
+// A pool of real bag/leather-goods photos. The first image of each
+// product is its main photo (the only one shown on the product page).
 const IMAGE_POOL = [
   'photos/toterbgcat.png',
   'photos/backpackrbgcat.png',
@@ -40,9 +40,32 @@ const IMAGE_POOL = [
   'photos/saddlerbg1.png',
   'photos/satchelrbg1.png',
   'photos/dufrbg2.png',
-  'hobo',
-  'hobo',
+  'photos/hoborbgcat.png',
+  'photos/hoborbgcat.png',
+  'photos/crossbodyrbgcat.png',
   'photos/dufrbgcat.png',
+  'backpack',
+  'backpack',
+  'backpack',
+  '19tote',
+  'tote',
+  'tote',
+  '22crossbody',
+  'crossbody',
+  'crossbody',
+  '25clutch',
+  'clutch',
+  'clutch',
+  'clutch',
+  '29satchel',
+  'satchel',
+  'satchel',
+  '32hobo',
+  'hobo',
+  'hobo',
+  '35duffel',
+  'duffel',
+  'duffel'
 ];
 
 function pickImages(seedIndex) {
@@ -54,135 +77,273 @@ function pickImages(seedIndex) {
   ];
 }
 
-const BAG_SIZES = ['Small', 'Medium', 'Large'];
-const ONE_SIZE = ['One Size'];
+// Build a 3-image gallery from explicit IMAGE_POOL indices (first image = main photo)
+function imagesByIndex(a, b, c) {
+  return [IMAGE_POOL[a], IMAGE_POOL[b], IMAGE_POOL[c]];
+}
+
+// Every bag is sold in a single fixed size. Each product carries its own
+// realistic dimensions in centimetres (height x width x depth).
+function formatDimensions(dim) {
+  if (!dim) return '';
+  const inch = (cm) => (cm / 2.54).toFixed(1).replace(/\.0$/, '');
+  return `${dim.h} \u00D7 ${dim.w} \u00D7 ${dim.d} cm (${inch(dim.h)} \u00D7 ${inch(dim.w)} \u00D7 ${inch(dim.d)} in)`;
+}
 
 const PRODUCTS = [
   { id: 1, name: 'Alder Leather Tote', brand: 'Ginhawá', category: 'Tote', price: 2480, section: 'featured',
-    rating: 4.8, reviews: 214, stock: 14, sizes: BAG_SIZES,
+    rating: 4.8, reviews: 214, stock: 14, dimensions: { h: 32, w: 40, d: 14 },
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }, { name: 'Sand', hex: '#D9C7A8' }],
     description: 'A roomy, structured tote in full-grain leather with a magnetic top closure and an interior zip pocket for the essentials.',
     images: pickImages(0) },
 
   { id: 2, name: 'Rowan Canvas Backpack', brand: 'Northfield', category: 'Backpack', price: 1890, section: 'featured',
-    rating: 4.6, reviews: 168, stock: 20, sizes: BAG_SIZES,
+    rating: 4.6, reviews: 168, stock: 20, dimensions: { h: 44, w: 30, d: 14 },
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Waxed canvas and leather trim over a padded 15" laptop sleeve — built for the daily commute and everything after it.',
     images: pickImages(1) },
 
   { id: 3, name: 'Sable Mini Crossbody', brand: 'Ginhawá', category: 'Crossbody', price: 1650, section: 'featured',
-    rating: 4.7, reviews: 132, stock: 9, sizes: ONE_SIZE,
+    rating: 4.7, reviews: 132, stock: 9, dimensions: { h: 16, w: 21, d: 6 },
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Burgundy', hex: '#6E2B2B' }],
     description: 'A compact crossbody with an adjustable strap and just enough room for a phone, cards, and keys.',
     images: pickImages(2) },
 
   { id: 4, name: 'Vela Structured Satchel', brand: 'Ferro & Co.', category: 'Satchel', price: 3120, section: 'featured',
-    rating: 4.9, reviews: 97, stock: 6, sizes: BAG_SIZES,
+    rating: 4.9, reviews: 97, stock: 6, dimensions: { h: 25, w: 33, d: 12 },
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Sharp, architectural lines and a detachable strap make this satchel equally at home on a desk or a shoulder.',
     images: pickImages(3) },
 
   { id: 5, name: 'Ember Evening Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1280, section: 'new', badge: 'New',
-    rating: 4.5, reviews: 41, stock: 12, sizes: ONE_SIZE,
+    rating: 4.5, reviews: 41, stock: 12, dimensions: { h: 15, w: 25, d: 3 },
     colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Ivory', hex: '#EFE8DA' }],
     description: 'A slim envelope clutch with a slide-out wrist strap, finished in soft pebbled leather.',
     images: pickImages(4) },
 
   { id: 6, name: 'Denali Weekend Duffel', brand: 'Northfield', category: 'Duffel', price: 2680, section: 'new', badge: 'New',
-    rating: 4.7, reviews: 76, stock: 8, sizes: BAG_SIZES,
+    rating: 4.7, reviews: 76, stock: 8, dimensions: { h: 33, w: 52, d: 24 },
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Stone', hex: '#B9AE9C' }],
     description: 'Water-resistant canvas, reinforced base, and a trolley sleeve — sized for a long weekend away.',
     images: pickImages(5) },
 
   { id: 7, name: 'Juno Slouch Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 2140, section: 'new', badge: 'New',
-    rating: 4.4, reviews: 58, stock: 10, sizes: ONE_SIZE,
+    rating: 4.4, reviews: 58, stock: 10, dimensions: { h: 26, w: 36, d: 11 },
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Soft, unstructured leather that slouches beautifully, with a wide top for easy in-and-out access.',
     images: pickImages(6) },
 
   { id: 8, name: 'Birch Daypack', brand: 'Northfield', category: 'Backpack', price: 1760, section: 'new', badge: 'New',
-    rating: 4.6, reviews: 89, stock: 4, sizes: BAG_SIZES,
+    rating: 4.6, reviews: 89, stock: 4, dimensions: { h: 40, w: 28, d: 13 },
     colors: [{ name: 'Sand', hex: '#D9C7A8' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'A lightweight daypack with a quick-access front pocket and breathable mesh straps.',
     images: pickImages(7) },
 
   { id: 9, name: 'Marlow Everyday Tote', brand: 'Ginhawá', category: 'Tote', price: 2320, was: 2650, section: 'best',
-    rating: 4.8, reviews: 301, stock: 17, sizes: BAG_SIZES,
+    rating: 4.8, reviews: 301, stock: 17, dimensions: { h: 30, w: 38, d: 13 },
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Our best-selling tote: an open top, flat base, and enough structure to hold its shape all day.',
     images: pickImages(8) },
 
   { id: 10, name: 'Reed Crossbody Saddle', brand: 'Ferro & Co.', category: 'Crossbody', price: 1540, section: 'best',
-    rating: 4.6, reviews: 145, stock: 13, sizes: ONE_SIZE,
+    rating: 4.6, reviews: 145, stock: 13, dimensions: { h: 17, w: 23, d: 8 },
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'A classic saddle-shaped crossbody with a flap closure and an antique brass buckle.',
     images: pickImages(9) },
 
   { id: 11, name: 'Halden Top-Handle Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2980, was: 3400, section: 'best',
-    rating: 4.9, reviews: 118, stock: 3, sizes: BAG_SIZES,
+    rating: 4.9, reviews: 118, stock: 3, dimensions: { h: 22, w: 28, d: 12 },
     colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'A polished top-handle satchel with a fold-over flap and a hidden magnetic clasp.',
     images: pickImages(10) },
 
   { id: 12, name: 'Otto Trail Duffel', brand: 'Northfield', category: 'Duffel', price: 2450, section: 'best',
-    rating: 4.5, reviews: 84, stock: 11, sizes: BAG_SIZES,
+    rating: 4.5, reviews: 84, stock: 11, dimensions: { h: 36, w: 55, d: 26 },
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Rugged, weatherproof, and built around a wide U-shaped opening for fast packing.',
     images: pickImages(11) },
 
   { id: 13, name: 'Summit Trail Backpack', brand: 'Northfield', category: 'Backpack', price: 1980, section: 'shop',
-    rating: 4.5, reviews: 62, stock: 5, sizes: BAG_SIZES,
+    rating: 4.5, reviews: 62, stock: 5, dimensions: { h: 48, w: 30, d: 16 },
     colors: [{ name: 'Stone', hex: '#B9AE9C' }, { name: 'Olive', hex: '#6B6B4F' }],
     description: 'A hiking-inspired backpack with a padded hip belt and a hydration-sleeve pocket.',
     images: pickImages(12) },
 
   { id: 14, name: 'Linen Weekend Tote', brand: 'Ferro & Co.', category: 'Tote', price: 1890, section: 'shop', badge: 'New',
-    rating: 4.4, reviews: 29, stock: 14, sizes: BAG_SIZES,
+    rating: 4.4, reviews: 29, stock: 14, dimensions: { h: 34, w: 42, d: 14 },
     colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Sand', hex: '#D9C7A8' }],
     description: 'A soft linen-and-leather tote for easy weekends — light enough to fold flat when not in use.',
     images: pickImages(13) },
 
   { id: 15, name: 'Pico Belt Bag Crossbody', brand: 'Ginhawá', category: 'Crossbody', price: 1180, section: 'shop', badge: 'New',
-    rating: 4.3, reviews: 22, stock: 3, sizes: ONE_SIZE,
+    rating: 4.3, reviews: 22, stock: 3, dimensions: { h: 12, w: 22, d: 7 },
     colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
     description: 'Wear it crossbody or as a belt bag — a hands-free way to carry the basics.',
     images: pickImages(14) },
 
   { id: 16, name: 'Opal Satin Clutch', brand: 'Ferro & Co.', category: 'Clutch', price: 1420, section: 'shop', badge: 'New',
-    rating: 4.6, reviews: 33, stock: 9, sizes: ONE_SIZE,
+    rating: 4.6, reviews: 33, stock: 9, dimensions: { h: 13, w: 22, d: 4 },
     colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Burgundy', hex: '#6E2B2B' }],
     description: 'A satin-finished evening clutch with a slim gold frame closure.',
     images: pickImages(0) },
 
   { id: 17, name: 'Noir Envelope Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1360, section: 'shop',
-    rating: 4.7, reviews: 51, stock: 0, sizes: ONE_SIZE,
+    rating: 4.7, reviews: 51, stock: 0, dimensions: { h: 15, w: 26, d: 3 },
     colors: [{ name: 'Black', hex: '#1E1B18' }],
     description: 'A minimalist envelope clutch in matte black leather. Currently sold out — more arriving soon.',
-    images: pickImages(1) },
+    images: pickImages(28) },
 
   { id: 18, name: 'Corin Frame Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2760, section: 'shop', badge: 'New',
-    rating: 4.5, reviews: 18, stock: 11, sizes: BAG_SIZES,
+    rating: 4.5, reviews: 18, stock: 11, dimensions: { h: 24, w: 30, d: 12 },
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Chestnut', hex: '#7A4B2B' }],
     description: 'A boxy frame satchel with a rigid silhouette and a slim detachable crossbody strap.',
     images: pickImages(2) },
 
   { id: 19, name: 'Willow Suede Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 2240, section: 'shop', badge: 'New',
-    rating: 4.6, reviews: 27, stock: 7, sizes: ONE_SIZE,
+    rating: 4.6, reviews: 27, stock: 7, dimensions: { h: 27, w: 37, d: 11 },
     colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Stone', hex: '#B9AE9C' }],
     description: 'Buttery suede with a relaxed drape and a single slouchy shoulder strap.',
     images: pickImages(3) },
 
   { id: 20, name: 'Marne Soft Hobo', brand: 'Northfield', category: 'Hobo', price: 1990, section: 'shop',
-    rating: 4.4, reviews: 46, stock: 16, sizes: ONE_SIZE,
+    rating: 4.4, reviews: 46, stock: 16, dimensions: { h: 26, w: 35, d: 10 },
     colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'An everyday hobo with a soft gusseted base that flexes to fit what you carry.',
     images: pickImages(4) },
 
   { id: 21, name: 'Voyage Leather Duffel', brand: 'Ginhawá', category: 'Duffel', price: 3420, section: 'shop', badge: 'New',
-    rating: 4.9, reviews: 15, stock: 6, sizes: BAG_SIZES,
+    rating: 4.9, reviews: 15, stock: 6, dimensions: { h: 35, w: 55, d: 26 },
     colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'Full-grain leather duffel with brass hardware and a removable shoulder strap — built to age well.',
-    images: pickImages(5) },
+    images: pickImages(15) },
+
+  /* ---- Additional styles: every category now carries exactly 6 bags ---- */
+
+  { id: 22, name: 'Harbor Roll-Top Backpack', brand: 'Northfield', category: 'Backpack', price: 2090, section: 'shop', badge: 'New',
+    rating: 4.6, reviews: 24, stock: 12, dimensions: { h: 46, w: 30, d: 14 },
+    colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'A weatherproof roll-top backpack with an expandable main compartment and a padded 16\" laptop sleeve.',
+    images: imagesByIndex(16) },
+
+  { id: 23, name: 'Atlas Leather Backpack', brand: 'Ginhawá', category: 'Backpack', price: 2380, section: 'shop',
+    rating: 4.8, reviews: 63, stock: 8, dimensions: { h: 42, w: 29, d: 13 },
+    colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'Full-grain leather meets a clean, minimal silhouette — a polished backpack that works from the office to the weekend.',
+    images: imagesByIndex(17) },
+
+  { id: 24, name: 'Cove Mini Backpack', brand: 'Ferro & Co.', category: 'Backpack', price: 1620, section: 'shop', badge: 'New',
+    rating: 4.4, reviews: 19, stock: 15, dimensions: { h: 28, w: 22, d: 10 },
+    colors: [{ name: 'Sand', hex: '#D9C7A8' }, { name: 'Burgundy', hex: '#6E2B2B' }],
+    description: 'A compact, lightweight backpack with a zip-around pocket — just right for short days out.',
+    images: imagesByIndex(18) },
+
+  { id: 25, name: 'Sienna Market Tote', brand: 'Ferro & Co.', category: 'Tote', price: 2090, section: 'shop',
+    rating: 4.6, reviews: 57, stock: 13, dimensions: { h: 33, w: 40, d: 15 },
+    colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Sand', hex: '#D9C7A8' }],
+    description: 'A relaxed leather market tote with sturdy rolled handles and a generous open main compartment.',
+    images: imagesByIndex(19) },
+
+  { id: 26, name: 'Cedar Zip Tote', brand: 'Northfield', category: 'Tote', price: 2260, section: 'shop', badge: 'New',
+    rating: 4.5, reviews: 21, stock: 10, dimensions: { h: 29, w: 36, d: 12 },
+    colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Stone', hex: '#B9AE9C' }],
+    description: 'A structured work tote with a full zip closure, a padded laptop pocket, and a trolley-strap sleeve.',
+    images: imagesByIndex(20) },
+
+  { id: 27, name: 'Isla Woven Tote', brand: 'Ginhawá', category: 'Tote', price: 1750, section: 'shop',
+    rating: 4.3, reviews: 36, stock: 18, dimensions: { h: 30, w: 38, d: 13 },
+    colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Chestnut', hex: '#7A4B2B' }],
+    description: 'A lightweight woven-leather tote with a breathable weave — made for warm days and weekend errands.',
+    images: imagesByIndex(21) },
+
+  { id: 28, name: 'Wren Phone Crossbody', brand: 'Ginhawá', category: 'Crossbody', price: 1290, section: 'shop', badge: 'New',
+    rating: 4.5, reviews: 28, stock: 16, dimensions: { h: 19, w: 11, d: 4 },
+    colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Burgundy', hex: '#6E2B2B' }],
+    description: 'A slim zip-top crossbody sized for a phone, cards, and keys, with an adjustable chain-and-leather strap.',
+    images: imagesByIndex(22) },
+
+  { id: 29, name: 'Lark Camera Bag', brand: 'Northfield', category: 'Crossbody', price: 1720, section: 'shop',
+    rating: 4.7, reviews: 44, stock: 7, dimensions: { h: 15, w: 20, d: 10 },
+    colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'A boxy, padded crossbody with a quick-access top flap — a travel favorite for cameras and everyday gear.',
+    images: imagesByIndex(23) },
+
+  { id: 30, name: 'Marlo Flap Crossbody', brand: 'Ferro & Co.', category: 'Crossbody', price: 1460, section: 'shop',
+    rating: 4.4, reviews: 31, stock: 9, dimensions: { h: 17, w: 24, d: 7 },
+    colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Chestnut', hex: '#7A4B2B' }],
+    description: 'A classic flap-front crossbody with a magnetic closure and a slim back pocket for quick-grab items.',
+    images: imagesByIndex(24) },
+
+  { id: 31, name: 'Vesper Wristlet Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1190, section: 'shop', badge: 'New',
+    rating: 4.4, reviews: 17, stock: 14, dimensions: { h: 12, w: 19, d: 3 },
+    colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Cognac', hex: '#A8703E' }],
+    description: 'A zip-top wristlet clutch in soft leather, with a detachable wrist strap for easy day-to-night carry.',
+    images: imagesByIndex(25) },
+
+  { id: 32, name: 'Dune Pouch Clutch', brand: 'Ferro & Co.', category: 'Clutch', price: 1330, section: 'shop',
+    rating: 4.5, reviews: 26, stock: 11, dimensions: { h: 15, w: 24, d: 6 },
+    colors: [{ name: 'Sand', hex: '#D9C7A8' }, { name: 'Ivory', hex: '#EFE8DA' }],
+    description: 'A softly gathered pouch clutch in pebbled leather, finished with a gold drawstring-style clasp.',
+    images: imagesByIndex(26) },
+
+  { id: 33, name: 'Gala Box Clutch', brand: 'Ginhawá', category: 'Clutch', price: 1580, section: 'shop',
+    rating: 4.7, reviews: 38, stock: 5, dimensions: { h: 11, w: 19, d: 6 },
+    colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'A rigid box clutch with a polished frame and a hidden chain strap — made for formal evenings.',
+    images: imagesByIndex(27) },
+
+  { id: 34, name: 'Pembroke Messenger Satchel', brand: 'Northfield', category: 'Satchel', price: 2890, section: 'shop',
+    rating: 4.6, reviews: 41, stock: 9, dimensions: { h: 28, w: 36, d: 10 },
+    colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'A roomy messenger-style satchel with twin buckle closures and a padded document compartment.',
+    images: imagesByIndex(29) },
+
+  { id: 35, name: 'Tessa Mini Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2540, section: 'shop', badge: 'New',
+    rating: 4.7, reviews: 20, stock: 7, dimensions: { h: 16, w: 22, d: 9 },
+    colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Cognac', hex: '#A8703E' }],
+    description: 'A petite top-handle satchel with a structured base and a detachable strap, sized for the essentials.',
+    images: imagesByIndex(30) },
+
+  { id: 36, name: 'Garnet Doctor Satchel', brand: 'Ferro & Co.', category: 'Satchel', price: 3260, was: 3650, section: 'shop',
+    rating: 4.9, reviews: 52, stock: 4, dimensions: { h: 26, w: 33, d: 14 },
+    colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Chestnut', hex: '#7A4B2B' }],
+    description: 'A heritage-inspired doctor-style satchel with a wide frame opening and hand-set brass hardware.',
+    images: imagesByIndex(31) },
+
+  { id: 37, name: 'Lumen Crescent Hobo', brand: 'Ginhawá', category: 'Hobo', price: 2190, section: 'shop', badge: 'New',
+    rating: 4.6, reviews: 23, stock: 10, dimensions: { h: 22, w: 32, d: 9 },
+    colors: [{ name: 'Ivory', hex: '#EFE8DA' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'A curved crescent-shaped hobo in smooth leather, with a magnetic top closure and a wide shoulder strap.',
+    images: imagesByIndex(32) },
+
+  { id: 38, name: 'Fern Bucket Hobo', brand: 'Northfield', category: 'Hobo', price: 1850, section: 'shop',
+    rating: 4.3, reviews: 34, stock: 13, dimensions: { h: 25, w: 23, d: 16 },
+    colors: [{ name: 'Olive', hex: '#6B6B4F' }, { name: 'Stone', hex: '#B9AE9C' }],
+    description: 'A relaxed bucket-style hobo with a drawstring top and a removable inner zip pouch.',
+    images: imagesByIndex(33) },
+
+  { id: 39, name: 'Calla Quilted Hobo', brand: 'Ferro & Co.', category: 'Hobo', price: 2380, section: 'shop',
+    rating: 4.7, reviews: 39, stock: 6, dimensions: { h: 25, w: 34, d: 10 },
+    colors: [{ name: 'Burgundy', hex: '#6E2B2B' }, { name: 'Chestnut', hex: '#7A4B2B' }],
+    description: 'Softly quilted leather with a slouchy shape and a chain-detailed strap — an easy statement piece.',
+    images: imagesByIndex(34) },
+
+  { id: 40, name: 'Ridge Gym Duffel', brand: 'Northfield', category: 'Duffel', price: 2290, section: 'shop',
+    rating: 4.5, reviews: 48, stock: 15, dimensions: { h: 30, w: 50, d: 24 },
+    colors: [{ name: 'Black', hex: '#1E1B18' }, { name: 'Stone', hex: '#B9AE9C' }],
+    description: 'A ventilated gym duffel with a separate shoe compartment and a wet-gear pocket.',
+    images: imagesByIndex(35) },
+
+  { id: 41, name: 'Tavern Barrel Duffel', brand: 'Ferro & Co.', category: 'Duffel', price: 2790, section: 'shop', badge: 'New',
+    rating: 4.6, reviews: 16, stock: 8, dimensions: { h: 30, w: 50, d: 27 },
+    colors: [{ name: 'Chestnut', hex: '#7A4B2B' }, { name: 'Olive', hex: '#6B6B4F' }],
+    description: 'A classic barrel-shaped duffel in waxed canvas and leather, with a roomy main compartment and a padded handle.',
+    images: imagesByIndex(36) },
+
+  { id: 42, name: 'Mesa Overnight Duffel', brand: 'Ginhawá', category: 'Duffel', price: 2980, was: 3300, section: 'shop',
+    rating: 4.8, reviews: 29, stock: 5, dimensions: { h: 32, w: 50, d: 22 },
+    colors: [{ name: 'Cognac', hex: '#A8703E' }, { name: 'Black', hex: '#1E1B18' }],
+    description: 'An overnight duffel with a structured base, a zip-around opening, and a removable padded shoulder strap.',
+    images: imagesByIndex(37) },
 ];
 
 // One representative image per category, for the homepage "Popular Categories" tiles
@@ -311,6 +472,26 @@ Object.keys(stockOverrides).forEach((id) => {
   if (product) product.stock = stockOverrides[id];
 });
 
+// Carts saved before sizes were removed: drop the size and merge any
+// lines that now share the same product + color.
+(function migrateLegacyCart() {
+  if (!Array.isArray(state.cart)) { state.cart = []; return; }
+  const merged = new Map();
+  state.cart.forEach((line) => {
+    if (!line || !getProductById(line.productId)) return;
+    const key = `${line.productId}|${line.color}`;
+    const existing = merged.get(key);
+    if (existing) existing.qty += (line.qty || 1);
+    else merged.set(key, { key, productId: line.productId, color: line.color, qty: line.qty || 1 });
+  });
+  state.cart = Array.from(merged.values()).map((line) => {
+    const product = getProductById(line.productId);
+    line.qty = Math.max(1, Math.min(line.qty, Math.max(product.stock, 1)));
+    return line;
+  });
+  saveJSON(STORAGE_KEYS.CART, state.cart);
+})();
+
 const saveCart = () => saveJSON(STORAGE_KEYS.CART, state.cart);
 const saveWishlist = () => saveJSON(STORAGE_KEYS.WISHLIST, state.wishlist);
 const saveUsers = () => saveJSON(STORAGE_KEYS.USERS, state.users);
@@ -366,14 +547,13 @@ function addToCart(productId, opts = {}) {
   const requestedQty = opts.qty || 1;
   const addQty = Math.min(requestedQty, room);
   const color = opts.color || (product.colors[0] && product.colors[0].name) || '';
-  const size = opts.size || product.sizes[0] || '';
-  const key = `${productId}|${color}|${size}`;
+  const key = `${productId}|${color}`;
 
   const existingLine = state.cart.find((line) => line.key === key);
   if (existingLine) {
     existingLine.qty = Math.min(existingLine.qty + addQty, product.stock);
   } else {
-    state.cart.push({ key, productId, color, size, qty: addQty });
+    state.cart.push({ key, productId, color, qty: addQty });
   }
 
   saveCart();
@@ -700,14 +880,14 @@ function renderGrid(targetId, items, opts = {}) {
    SECTION 8: Product quick-view modal
    ------------------------------------------------------------ */
 let currentModalProduct = null;
-let modalState = { color: '', size: '', qty: 1, imgIndex: 0 };
+let modalState = { color: '', qty: 1 };
 let previousHash = 'home';
 
 function openProductModal(id) {
   const product = getProductById(id);
   if (!product) { toast('That product could not be found.', 'error'); return; }
   currentModalProduct = product;
-  modalState = { color: (product.colors[0] && product.colors[0].name) || '', size: product.sizes[0] || '', qty: 1, imgIndex: 0 };
+  modalState = { color: (product.colors[0] && product.colors[0].name) || '', qty: 1 };
   renderModalBody();
   $('#productModal').hidden = false;
   document.body.style.overflow = 'hidden';
@@ -731,10 +911,7 @@ function renderModalBody() {
 
   body.innerHTML = `
     <div class="modal-gallery">
-      <div class="modal-gallery-main"><img src="${p.images[modalState.imgIndex]}" alt="${p.name}" id="modalMainImg" /></div>
-      <div class="modal-gallery-thumbs" id="modalThumbs">
-        ${p.images.map((img, i) => `<button class="modal-thumb ${i === modalState.imgIndex ? 'is-active' : ''}" data-idx="${i}" type="button" aria-label="View angle ${i + 1}"><img src="${img}" alt="${p.name} angle ${i + 1}" /></button>`).join('')}
-      </div>
+      <div class="modal-gallery-main"><img src="${p.images[0]}" alt="${p.name}" id="modalMainImg" /></div>
     </div>
     <div class="modal-details">
       <p class="product-brand">${p.brand}</p>
@@ -755,16 +932,10 @@ function renderModalBody() {
           `).join('')}
         </div>
       </div>
-      <div class="modal-option-group">
-        <span>Size</span>
-        <div class="option-radio-list" id="modalSizes" role="radiogroup" aria-label="Size">
-          ${p.sizes.map((s) => `
-            <label class="option-radio ${s === modalState.size ? 'is-active' : ''}">
-              <input type="radio" name="modalSize" value="${s}" ${s === modalState.size ? 'checked' : ''} />
-              <span class="option-radio-label">${s}</span>
-            </label>
-          `).join('')}
-        </div>
+      <div class="modal-option-group modal-dimensions-group">
+        <span>Dimensions</span>
+        <p class="modal-dimensions" id="modalDimensions">${formatDimensions(p.dimensions)}</p>
+        <p class="modal-dimensions-note">Height \u00D7 Width \u00D7 Depth &middot; One fixed size</p>
       </div>
       <div class="modal-qty-row">
         <span>Quantity</span>
@@ -781,22 +952,10 @@ function renderModalBody() {
     </div>
   `;
 
-  $('#modalThumbs', body).addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-idx]');
-    if (!btn) return;
-    modalState.imgIndex = Number(btn.dataset.idx);
-    renderModalBody();
-  });
   $('#modalColors', body).addEventListener('change', (e) => {
     const input = e.target.closest('input[name="modalColor"]');
     if (!input) return;
     modalState.color = input.value;
-    renderModalBody();
-  });
-  $('#modalSizes', body).addEventListener('change', (e) => {
-    const input = e.target.closest('input[name="modalSize"]');
-    if (!input) return;
-    modalState.size = input.value;
     renderModalBody();
   });
 
@@ -820,11 +979,11 @@ function renderModalBody() {
 
   const addBtn = $('#modalAddToCart', body);
   if (addBtn) addBtn.addEventListener('click', () => {
-    addToCart(p.id, { color: modalState.color, size: modalState.size, qty: modalState.qty });
+    addToCart(p.id, { color: modalState.color, qty: modalState.qty });
   });
   const buyBtn = $('#modalBuyNow', body);
   if (buyBtn) buyBtn.addEventListener('click', () => {
-    const added = addToCart(p.id, { color: modalState.color, size: modalState.size, qty: modalState.qty });
+    const added = addToCart(p.id, { color: modalState.color, qty: modalState.qty });
     if (added) {
       closeProductModal();
       requireLoginOrRedirect('checkout') && (location.hash = 'checkout');
@@ -1020,7 +1179,7 @@ function renderCart() {
       <div class="cart-line-info">
         <p class="product-brand">${line.product.brand}</p>
         <h3 class="product-name">${line.product.name}</h3>
-        <p class="cart-line-options">${line.color}${line.size ? ' · ' + line.size : ''}</p>
+        <p class="cart-line-options">${line.color}</p>
         <div class="cart-line-actions">
           <div class="qty-stepper">
             <button type="button" data-qty-minus aria-label="Decrease quantity">&minus;</button>
@@ -1264,7 +1423,7 @@ function renderReviewStep() {
     <h3>Items</h3>
     ${items.map((l) => `
       <div class="review-item-row">
-        <span>${l.product.name} (${l.color}${l.size ? ', ' + l.size : ''}) × ${l.qty}</span>
+        <span>${l.product.name} (${l.color}) × ${l.qty}</span>
         <span>${formatPrice(l.product.price * l.qty)}</span>
       </div>
     `).join('')}
@@ -1302,7 +1461,7 @@ function placeOrder() {
       userEmail: getCurrentUser().email,
       date: new Date().toISOString(),
       status: 'Confirmed',
-      items: items.map((l) => ({ productId: l.productId, name: l.product.name, color: l.color, size: l.size, qty: l.qty, price: l.product.price })),
+      items: items.map((l) => ({ productId: l.productId, name: l.product.name, color: l.color, qty: l.qty, price: l.product.price })),
       subtotal, shipping, total,
       shippingInfo: checkoutData.shipping,
       payment: checkoutData.payment,
@@ -1951,21 +2110,6 @@ function initCareGuide() {
 }
 
 /* ------------------------------------------------------------
-   SECTION 20: Search datalist — autocomplete suggestions
-   Populates the header search <datalist> from the live product
-   database, so suggestions stay in sync with SECTION 1 above.
-   ------------------------------------------------------------ */
-function initSearchDatalist() {
-  const list = $('#searchSuggestions');
-  if (!list) return;
-  const names = PRODUCTS.map((p) => p.name);
-  const categories = PRODUCTS.map((p) => p.category);
-  const brands = PRODUCTS.map((p) => p.brand);
-  const options = Array.from(new Set([...categories, ...brands, ...names]));
-  list.innerHTML = options.map((o) => `<option value="${escapeHtml(o)}"></option>`).join('');
-}
-
-/* ------------------------------------------------------------
    SECTION 21: Care video — autoplay on open + play/pause toggle
    The video panel's iframe uses srcdoc, so its <video> is same-
    origin and fully scriptable. Every time the page (or the
@@ -2026,7 +2170,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initFollowMap();
   initCareGuide();
   initCareVideoPlayback();
-  initSearchDatalist();
   renderHome();
   renderRoute();
 });

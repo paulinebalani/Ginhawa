@@ -91,8 +91,7 @@
     <div class="search-bar" id="searchBar">
       <div class="search-bar-inner">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" list="searchSuggestions" autocomplete="off" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
-        <datalist id="searchSuggestions"></datalist>
+        <input type="text" id="searchInput" autocomplete="off" placeholder="Search bags, categories, or styles…" aria-label="Search products" />
         <button class="search-clear" id="searchClear" aria-label="Clear search" hidden>&times;</button>
       </div>
       <p class="search-hint" id="searchHint"></p>
@@ -776,12 +775,11 @@
 
       <div class="compare-table-wrap" id="compareTableWrap">
         <table class="compare-table">
-          <caption class="sr-only">Comparison of bag types by price range, best use, materials, and ideal buyer</caption>
+          <caption class="sr-only">Comparison of bag types by price range, materials, and ideal buyer</caption>
           <thead>
             <tr>
               <th scope="col">Bag Type</th>
               <th scope="col">Price Range</th>
-              <th scope="col">Best Use</th>
               <th scope="col">Materials</th>
               <th scope="col">Ideal For</th>
             </tr>
@@ -789,50 +787,43 @@
           <tbody>
             <tr>
               <th scope="row">Backpack</th>
-              <td data-label="Price Range">₱1,760 – ₱1,980</td>
-              <td data-label="Best Use">Commuting, travel, everyday carry</td>
+              <td data-label="Price Range">₱1,620 – ₱2,380</td>
               <td data-label="Materials">Waxed canvas with leather trim</td>
               <td data-label="Ideal For">Commuters, students, frequent travelers</td>
             </tr>
             <tr>
               <th scope="row">Tote</th>
-              <td data-label="Price Range">₱1,890 – ₱2,480</td>
-              <td data-label="Best Use">Work, errands, weekend carry-all</td>
+              <td data-label="Price Range">₱1,750 – ₱2,480</td>
               <td data-label="Materials">Full-grain leather or leather-trimmed linen</td>
               <td data-label="Ideal For">Office use, everyday errands, new parents</td>
             </tr>
             <tr>
               <th scope="row">Crossbody</th>
-              <td data-label="Price Range">₱1,180 – ₱1,650</td>
-              <td data-label="Best Use">Hands-free errands, nights out, travel</td>
+              <td data-label="Price Range">₱1,180 – ₱1,720</td>
               <td data-label="Materials">Leather with adjustable webbing or leather strap</td>
               <td data-label="Ideal For">Minimalists, travelers, hands-free days</td>
             </tr>
             <tr>
               <th scope="row">Clutch</th>
-              <td data-label="Price Range">₱1,280 – ₱1,420</td>
-              <td data-label="Best Use">Evenings out, formal occasions</td>
+              <td data-label="Price Range">₱1,190 – ₱1,580</td>
               <td data-label="Materials">Pebbled or satin-finished leather</td>
               <td data-label="Ideal For">Evening events, formal wear, light carry</td>
             </tr>
             <tr>
               <th scope="row">Satchel</th>
-              <td data-label="Price Range">₱2,760 – ₱3,120</td>
-              <td data-label="Best Use">Office, meetings, structured everyday carry</td>
+              <td data-label="Price Range">₱2,540 – ₱3,260</td>
               <td data-label="Materials">Structured full-grain leather</td>
               <td data-label="Ideal For">Professionals, desk-to-dinner days</td>
             </tr>
             <tr>
               <th scope="row">Hobo</th>
-              <td data-label="Price Range">₱1,990 – ₱2,240</td>
-              <td data-label="Best Use">Casual everyday carry, weekend outings</td>
+              <td data-label="Price Range">₱1,850 – ₱2,380</td>
               <td data-label="Materials">Soft suede or unstructured leather</td>
               <td data-label="Ideal For">Casual dressers, easy in-and-out access</td>
             </tr>
             <tr>
               <th scope="row">Duffel</th>
-              <td data-label="Price Range">₱2,450 – ₱3,420</td>
-              <td data-label="Best Use">Weekend trips, gym, short travel</td>
+              <td data-label="Price Range">₱2,290 – ₱3,420</td>
               <td data-label="Materials">Water-resistant canvas or full-grain leather</td>
               <td data-label="Ideal For">Weekend travelers, gym-goers, short trips</td>
             </tr>
@@ -928,7 +919,7 @@
         </details>
         <details class="faq-item">
           <summary>How do I know which size or style to choose?</summary>
-          <p>Each product page lists dimensions and recommended uses, and our <a href="#compare">Compare Bags</a> page breaks down capacity, materials, and best use across every bag type we carry.</p>
+          <p>Each product page lists dimensions and recommended uses, and our <a href="#compare">Compare Bags</a> page breaks down price range, materials, and ideal buyer across every bag type we carry.</p>
         </details>
         <details class="faq-item">
           <summary>What materials do you use?</summary>
