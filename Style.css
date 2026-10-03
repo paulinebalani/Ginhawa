@@ -1871,7 +1871,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   position: absolute;
   top: 0; left: 24px; right: 24px; bottom: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   pointer-events: none;
 }
 .follow-map-label {

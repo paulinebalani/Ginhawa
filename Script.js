@@ -2069,19 +2069,30 @@ function initFollowMap() {
   const areas = $$('#followMap area');
   if (!img || !areas.length) return;
 
+  // The image is shown with object-fit: cover (cropped differently per
+  // breakpoint), so each data-rect (percent of the ORIGINAL image) is mapped
+  // through the same cover scaling/offset the browser applies, then clamped
+  // to the visible box.
   function updateAreas() {
     const w = img.clientWidth;
     const h = img.clientHeight;
+    const nw = img.naturalWidth || w;
+    const nh = img.naturalHeight || h;
     if (!w || !h) return;
+    const scale = Math.max(w / nw, h / nh);
+    const dispW = nw * scale;
+    const dispH = nh * scale;
+    const offX = (w - dispW) / 2;
+    const offY = (h - dispH) / 2;
+    const clamp = (v, max) => Math.max(0, Math.min(max, Math.round(v)));
     areas.forEach((area) => {
       const [x1, y1, x2, y2] = area.dataset.rect.split(',').map(Number);
-      const coords = [
-        Math.round((x1 / 100) * w),
-        Math.round((y1 / 100) * h),
-        Math.round((x2 / 100) * w),
-        Math.round((y2 / 100) * h),
-      ];
-      area.coords = coords.join(',');
+      area.coords = [
+        clamp(offX + (x1 / 100) * dispW, w),
+        clamp(offY + (y1 / 100) * dispH, h),
+        clamp(offX + (x2 / 100) * dispW, w),
+        clamp(offY + (y2 / 100) * dispH, h),
+      ].join(',');
     });
   }
 
@@ -2093,6 +2104,7 @@ function initFollowMap() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(updateAreas, 120);
   });
+  window.addEventListener('orientationchange', () => setTimeout(updateAreas, 200));
 }
 
 /* ------------------------------------------------------------
