@@ -2080,3 +2080,17 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .step-num { width: 24px; height: 24px; font-size: 15px; }
   .reviews-layout > * { min-width: 0; }
 }
+/* --- Categories list: stacked vertically on mobile / smaller screens.
+       Desktop and laptop (wider than 900px) keep the horizontal row. --- */
+@media (max-width: 900px) {
+  .category-panel.is-open {
+    max-height: min(400px, 55vh);   /* room for every category; scrolls if the screen is short */
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+  .category-list {
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: visible;
+  }
+}

@@ -1645,6 +1645,7 @@ function initHeaderAndGlobalEvents() {
 
     categoryList.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      if (window.matchMedia('(max-width: 900px)').matches) return; // list is vertical on small screens
       isDown = true;
       moved = false;
       startX = e.clientX;
