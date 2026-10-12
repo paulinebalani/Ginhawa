@@ -1637,6 +1637,56 @@ function initHeaderAndGlobalEvents() {
     categoriesToggle.setAttribute('aria-expanded', String(isOpen));
   });
 
+  // Category list — touch/trackpad scroll natively; this adds mouse drag and
+  // vertical-wheel support so desktop mouse users can slide it left and right
+  const categoryList = $('#categoryList');
+  if (categoryList) {
+    let isDown = false, moved = false, startX = 0, startScroll = 0;
+
+    categoryList.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      isDown = true;
+      moved = false;
+      startX = e.clientX;
+      startScroll = categoryList.scrollLeft;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 5) {
+        moved = true;
+        categoryList.style.scrollBehavior = 'auto';
+        categoryList.style.userSelect = 'none';
+      }
+      if (moved) categoryList.scrollLeft = startScroll - dx;
+    });
+    const endDrag = () => {
+      if (!isDown) return;
+      isDown = false;
+      categoryList.style.scrollBehavior = '';
+      categoryList.style.userSelect = '';
+      setTimeout(() => { moved = false; }, 0);
+    };
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    // Swallow the click that ends a drag so it doesn't select a category
+    categoryList.addEventListener('click', (e) => {
+      if (moved) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    // Mouse wheel (vertical) scrolls the list sideways; at either end, the page scrolls as usual
+    categoryList.addEventListener('wheel', (e) => {
+      if (e.deltaX !== 0 || e.shiftKey) return;
+      const max = categoryList.scrollWidth - categoryList.clientWidth;
+      if (max <= 0) return;
+      const atStart = categoryList.scrollLeft <= 0 && e.deltaY < 0;
+      const atEnd = categoryList.scrollLeft >= max - 1 && e.deltaY > 0;
+      if (atStart || atEnd) return;
+      e.preventDefault();
+      categoryList.scrollBy({ left: e.deltaY * (e.deltaMode === 1 ? 16 : 1), behavior: 'auto' });
+    }, { passive: false });
+  }
+
   // Skip to footer — small floating button, smooth-scrolls to the footer
   const skipToFooterBtn = $('#skipToFooterBtn');
   if (skipToFooterBtn) {

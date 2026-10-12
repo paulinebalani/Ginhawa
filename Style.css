@@ -278,12 +278,20 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .category-list {
   display: flex;
   gap: 8px;
-  width: max-content;
+  width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
   padding-bottom: 4px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 .category-list::-webkit-scrollbar { display: none; }
+.category-list > li { flex: 0 0 auto; }
+@media (prefers-reduced-motion: reduce) {
+  .category-list { scroll-behavior: auto; }
+}
 
 .cat-pill {
   padding: 7px 12px;
@@ -298,6 +306,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .cat-pill:hover { border-color: var(--color-leather); color: var(--color-leather); }
 .cat-pill.is-active { background: var(--color-ink); color: #fff; border-color: var(--color-ink); }
+/* Inset focus ring so it isn't clipped by the scrolling list */
+.cat-pill:focus-visible { outline-offset: -2px; }
 
 /* -------------------------------------------------------------
    SECTION: "Back to Home" wayfinding bar (shown on non-home views)
@@ -2028,4 +2038,45 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .promo-marquee-track { gap: 16px; }
   .promo-marquee-track-wrap { padding-left: 16px; animation-duration: 20s; }
   .promo-marquee-item { font-size: 14px; letter-spacing: .07em; }
+}
+/* =============================================================
+   RESPONSIVE REFINEMENTS — small screens only
+   Every rule below sits inside a max-width media query, so the
+   desktop / laptop layout (wider than 900px) is not affected.
+   ============================================================= */
+
+/* --- Images: show the whole picture instead of cropping it.
+       They scale down to fit, keeping their original aspect ratio. --- */
+@media (max-width: 900px) {
+  .category-card img { object-fit: contain; }
+  .about-media img { aspect-ratio: auto; height: auto; max-height: 75vh; object-fit: contain; }
+  .follow-map-img { aspect-ratio: auto; height: auto; }   /* natural ratio; hotspots are still mapped by initFollowMap() */
+  .lifestyle-media img { object-fit: contain; }
+}
+@media (max-width: 768px) {
+  .lifestyle-media { min-height: 0; }
+  .lifestyle-media img { height: auto; max-height: 75vh; }
+}
+
+/* --- Cart lines on phones: image box matches its 72px column,
+       and the quantity / Remove row wraps instead of overflowing --- */
+@media (max-width: 640px) {
+  .cart-line-media { width: 72px; height: 78px; }
+  .cart-line-info { min-width: 0; }
+  .cart-line-info .product-name { overflow-wrap: anywhere; }
+  .cart-line-actions { flex-wrap: wrap; gap: 8px 14px; }
+}
+
+/* --- Very small phones (360px and below, e.g. 320px devices) --- */
+@media (max-width: 360px) {
+  .header-inner { padding: 0 10px; }
+  .header-inner .icon-btn { width: 34px; height: 34px; }
+  .header-right { gap: 2px; }
+  .hamburger-btn { margin-right: 2px; }
+  .search-gap { margin-right: 4px; }
+  .brand { font-size: 22px; }
+  .step-indicator { flex-wrap: wrap; gap: 8px; }
+  .step { gap: 6px; font-size: 15px; }
+  .step-num { width: 24px; height: 24px; font-size: 15px; }
+  .reviews-layout > * { min-width: 0; }
 }
