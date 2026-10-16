@@ -1028,6 +1028,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   grid-template-columns: 1.3fr 1fr;
   gap: 18px;
 }
+#view-account .account-layout { padding-bottom: 28px; }
 .account-card {
   padding: 16px;
   background: var(--color-surface);
@@ -1253,6 +1254,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .order-status { font-size: 16px; font-weight: 700; padding: 4px 8px; border-radius: 999px; background: var(--color-surface-muted); color: var(--color-leather); }
 .order-items-preview { font-size: 17px; color: var(--color-ink-soft); margin: 0 0 8px; }
 .order-total { font-weight: 700; }
+
+/* Order History section inside My Account */
+.account-orders { max-width: 720px; margin: 0 auto; padding: 0 18px 72px; }
+.account-orders h2 { font-size: 26px; margin: 0 0 14px; }
+.account-orders .orders-list { max-width: none; padding: 0; }
+.order-details { margin-top: 10px; border-top: 1px solid var(--color-line); padding-top: 10px; }
+.order-details summary { cursor: pointer; font-weight: 700; font-size: 17px; color: var(--color-leather); }
+.order-details-body { margin-top: 10px; }
+.order-details-block { padding: 10px 0; border-bottom: 1px solid var(--color-line); font-size: 17px; color: var(--color-ink-soft); }
+.order-details-block:last-child { border-bottom: none; }
+.order-details-block h4 { font-family: var(--font-body); font-size: 17px; font-weight: 700; color: var(--color-ink); margin: 0 0 8px; }
+.order-details-block p { margin: 0 0 6px; }
 
 /* -------------------------------------------------------------
    SECTION: Product modal (quick view / details)

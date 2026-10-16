@@ -23,7 +23,7 @@
   <div class="promo-marquee" id="promoMarquee" role="region" aria-label="Store promotions">
     <div class="promo-marquee-track-wrap">
       <div class="promo-marquee-track">
-        <span class="promo-marquee-item">Free Shipping on Orders Over &#8369;2,500</span>
+        <span class="promo-marquee-item">Free Shipping on Orders Over &#8369;500</span>
         <span class="promo-marquee-sep" aria-hidden="true">&#10022;</span>
         <span class="promo-marquee-item">Full-Grain Leather, Hand-Finished</span>
         <span class="promo-marquee-sep" aria-hidden="true">&#10022;</span>
@@ -33,7 +33,7 @@
         <span class="promo-marquee-sep" aria-hidden="true">&#10022;</span>
       </div>
       <div class="promo-marquee-track" aria-hidden="true">
-        <span class="promo-marquee-item">Free Shipping on Orders Over &#8369;2,500</span>
+        <span class="promo-marquee-item">Free Shipping on Orders Over &#8369;500</span>
         <span class="promo-marquee-sep" aria-hidden="true">&#10022;</span>
         <span class="promo-marquee-item">Full-Grain Leather, Hand-Finished</span>
         <span class="promo-marquee-sep" aria-hidden="true">&#10022;</span>
@@ -395,6 +395,14 @@
           <button class="btn btn-primary btn-block" id="logoutBtn">Log Out</button>
         </div>
       </div>
+      <div class="account-orders" id="accountOrdersSection">
+        <h2>Order History</h2>
+        <div class="orders-list account-orders-list" id="accountOrdersList"></div>
+        <div class="empty-state" id="accountOrdersEmpty" hidden>
+          <p>No orders yet. Once you check out, your orders will appear here.</p>
+          <a href="#shop" class="btn btn-primary" data-nav="shop">Start Shopping</a>
+        </div>
+      </div>
     </section>
 
     <!-- =========================================================
@@ -439,19 +447,7 @@
             <div class="form-row form-row-3">
               <div class="field">
                 <label for="shipCity">City</label>
-                <input type="text" id="shipCity" list="cityOptions" autocomplete="off" required />
-                <datalist id="cityOptions">
-                  <option value="Makati City"></option>
-                  <option value="Quezon City"></option>
-                  <option value="Manila"></option>
-                  <option value="Cebu City"></option>
-                  <option value="Davao City"></option>
-                  <option value="New York"></option>
-                  <option value="Los Angeles"></option>
-                  <option value="London"></option>
-                  <option value="Sydney"></option>
-                  <option value="Toronto"></option>
-                </datalist>
+                <input type="text" id="shipCity" autocomplete="off" required />
                 <p class="field-error" id="shipCityError"></p>
               </div>
               <div class="field">
@@ -467,15 +463,7 @@
             </div>
             <div class="field">
               <label for="shipCountry">Country</label>
-              <select id="shipCountry" required>
-                <option value="">Select a country</option>
-                <option>United States</option>
-                <option>Canada</option>
-                <option>United Kingdom</option>
-                <option>Philippines</option>
-                <option>Australia</option>
-                <option>Other</option>
-              </select>
+              <input type="text" id="shipCountry" autocomplete="off" required />
               <p class="field-error" id="shipCountryError"></p>
             </div>
             <div class="field">
@@ -505,10 +493,6 @@
               <label class="payment-option is-active">
                 <input type="radio" name="paymentMethod" value="card" checked />
                 <span class="payment-option-label">Credit / Debit Card</span>
-              </label>
-              <label class="payment-option">
-                <input type="radio" name="paymentMethod" value="paypal" />
-                <span class="payment-option-label">PayPal</span>
               </label>
               <label class="payment-option">
                 <input type="radio" name="paymentMethod" value="cod" />
@@ -931,7 +915,7 @@
         </details>
         <details class="faq-item">
           <summary>What payment methods do you accept?</summary>
-          <p>We accept major credit and debit cards, PayPal, and cash on delivery in select areas, all selectable at checkout.</p>
+          <p>We accept major credit and debit cards and cash on delivery in select areas, all selectable at checkout.</p>
         </details>
         <details class="faq-item">
           <summary>Do you ship internationally?</summary>

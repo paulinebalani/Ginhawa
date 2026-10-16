@@ -1245,6 +1245,69 @@ function renderAccount() {
     <p class="account-email">${user.email}</p>
     <p class="account-meta">${state.orders.filter((o) => o.userEmail === user.email).length} order(s) placed · ${state.wishlist.length} item(s) saved</p>
   `;
+  renderAccountOrders(user);
+}
+
+// Order History section shown on the My Account page. Orders are read from the
+// persisted order store, so they remain available after leaving checkout.
+function renderAccountOrders(user) {
+  const list = $('#accountOrdersList');
+  const empty = $('#accountOrdersEmpty');
+  if (!list || !empty) return;
+  const myOrders = state.orders
+    .filter((o) => o.userEmail === user.email)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  empty.hidden = myOrders.length > 0;
+  list.style.display = myOrders.length > 0 ? '' : 'none';
+  list.innerHTML = '';
+
+  myOrders.forEach((order) => {
+    const s = order.shippingInfo || {};
+    const p = order.payment || {};
+    const paymentLabel = p.method === 'card'
+      ? `Card ending in ${p.cardLast4}`
+      : (p.method === 'paypal' ? 'PayPal' : 'Cash on Delivery');
+    const shipMethod = s.shippingMethod === 'express' ? 'Express Shipping' : 'Standard Shipping';
+    const card = document.createElement('article');
+    card.className = 'order-card';
+    card.innerHTML = `
+      <div class="order-card-head">
+        <h3>Order ${order.id}</h3>
+        <span class="order-status">${order.status}</span>
+      </div>
+      <p class="order-date">${new Date(order.date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      <p class="order-items-preview">${order.items.reduce((sum, i) => sum + i.qty, 0)} item(s)</p>
+      <p class="order-total">Total: ${formatPrice(order.total)}</p>
+      <details class="order-details">
+        <summary>View order details</summary>
+        <div class="order-details-body">
+          <div class="order-details-block">
+            <h4>Items</h4>
+            ${order.items.map((i) => `
+              <div class="review-item-row">
+                <span>${i.name} (${i.color}${i.size ? ', ' + i.size : ''}) × ${i.qty}</span>
+                <span>${formatPrice(i.price * i.qty)}</span>
+              </div>
+            `).join('')}
+            <div class="review-item-row"><span>Subtotal</span><span>${formatPrice(order.subtotal)}</span></div>
+            <div class="review-item-row"><span>Shipping</span><span>${order.shipping === 0 ? 'Free' : formatPrice(order.shipping)}</span></div>
+            <div class="review-item-row" style="font-weight:700;"><span>Total</span><span>${formatPrice(order.total)}</span></div>
+          </div>
+          <div class="order-details-block">
+            <h4>Shipping To</h4>
+            <p>${s.shipFullName}<br>${s.shipAddress}<br>${s.shipCity}, ${s.shipState} ${s.shipZip}<br>${s.shipCountry}</p>
+            <p>${shipMethod}</p>
+          </div>
+          <div class="order-details-block">
+            <h4>Payment</h4>
+            <p>${paymentLabel}</p>
+          </div>
+        </div>
+      </details>
+    `;
+    list.appendChild(card);
+  });
 }
 
 // ---- Orders ----
@@ -1359,7 +1422,7 @@ function validateShippingForm() {
     shipCity: $('#shipCity').value.trim(),
     shipState: $('#shipState').value.trim(),
     shipZip: $('#shipZip').value.trim(),
-    shipCountry: $('#shipCountry').value,
+    shipCountry: $('#shipCountry').value.trim(),
     shippingMethod: $('input[name="shippingMethod"]:checked').value,
   };
   let ok = true;
@@ -1372,7 +1435,7 @@ function validateShippingForm() {
   if (!fields.shipCity) { setFieldError('shipCity', 'City is required.'); ok = false; }
   if (!fields.shipState) { setFieldError('shipState', 'State / province is required.'); ok = false; }
   if (!fields.shipZip) { setFieldError('shipZip', 'Postal code is required.'); ok = false; }
-  if (!fields.shipCountry) { setFieldError('shipCountry', 'Select a country.'); ok = false; }
+  if (!fields.shipCountry) { setFieldError('shipCountry', 'Country is required.'); ok = false; }
 
   if (ok) checkoutData.shipping = fields;
   return ok;
@@ -1424,7 +1487,7 @@ function renderReviewStep() {
 
   const paymentLabel = p.method === 'card'
     ? `Card ending in ${p.cardLast4}`
-    : (p.method === 'paypal' ? 'PayPal' : 'Cash on Delivery');
+    : 'Cash on Delivery';
   $('#reviewPayment').innerHTML = `<h3>Payment</h3><p>${paymentLabel}</p>`;
 
   $('#reviewItems').innerHTML = `
@@ -1525,12 +1588,9 @@ function renderConfirmationView(order) {
       <div class="review-item-row"><span>Shipping</span><span>${order.shipping === 0 ? 'Free' : formatPrice(order.shipping)}</span></div>
       <div class="review-item-row" style="font-weight:700;"><span>Total</span><span>${formatPrice(order.total)}</span></div>
     </div>
-    <pre class="ascii-bag" aria-hidden="true">     ____
-    /    \\
-   /______\\
-  |        |
-  | Ginhawá |
-  |_________|</pre>
+    <pre class="ascii-bag" aria-hidden="true"> 
+    Ginhawá    
+     </pre>
     <p class="ascii-bag-caption">Packed with care, just for you.</p>
     <div class="confirmation-actions">
       <a href="#home" class="btn btn-primary">Continue Shopping</a>
