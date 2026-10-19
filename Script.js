@@ -38,7 +38,7 @@ const IMAGE_POOL = [
   'photos/daypackrbg.png',
   'photos/toterbg1.png',
   'photos/saddlerbg1.png',
-  'photos/satchelrbg1.png',
+  'photos/satcheltan.png',
   'photos/dufrbg2.png',
   'photos/hoborbgcat.png',
   'photos/hoborbgcat.png',
@@ -159,9 +159,9 @@ const PRODUCTS = [
     description: 'A classic saddle-shaped crossbody with a flap closure and an antique brass buckle.',
     images: pickImages(9) },
 
-  { id: 11, name: 'Halden Top-Handle Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2980, was: 3400, section: 'best',
+  { id: 11, name: 'Top-Handle Satchel', brand: 'Ginhawá', category: 'Satchel', price: 2980, was: 3400, section: 'best',
     rating: 4.9, reviews: 118, stock: 3, dimensions: { h: 22, w: 28, d: 12 },
-    colors: [{ name: 'Congo Brown', hex: '#6b3e1b' }, { name: 'Black', hex: '#1E1B18' }],
+    colors: [{ name: 'Coffee Brown', hex: '#492a13' }, { name: 'Black', hex: '#1E1B18' }],
     description: 'A polished top-handle satchel with a fold-over flap and a hidden magnetic clasp.',
     images: pickImages(10) },
 
@@ -890,6 +890,9 @@ function renderGrid(targetId, items, opts = {}) {
 let currentModalProduct = null;
 let modalState = { color: '', qty: 1 };
 let previousHash = 'home';
+// Set when the product modal is closed, so the view that reappears keeps the
+// page at the same scroll position instead of jumping back to the top.
+let pendingScrollRestore = null;
 
 function openProductModal(id) {
   const product = getProductById(id);
@@ -906,6 +909,7 @@ function closeProductModal() {
   document.body.style.overflow = '';
   currentModalProduct = null;
   if (location.hash.startsWith('#product/')) {
+    pendingScrollRestore = { view: previousHash, y: window.scrollY };
     location.hash = previousHash;
   }
 }
@@ -1025,6 +1029,8 @@ function showView(name) {
   $('#categoryPanel').classList.remove('is-open');
   $('#categoriesToggle').setAttribute('aria-expanded', 'false');
 
+  // Returning from the product modal to the same view: stay where we were.
+  if (pendingScrollRestore && pendingScrollRestore.view === name) return;
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
@@ -1039,6 +1045,10 @@ function renderRoute() {
 
   if (!KNOWN_VIEWS.includes(hash)) return; // e.g. #lifestyle-anchor — let the browser scroll normally
 
+  // Closing a product via the browser Back button should also keep the scroll position
+  if (!$('#productModal').hidden && hash === previousHash && !pendingScrollRestore) {
+    pendingScrollRestore = { view: hash, y: window.scrollY };
+  }
   $('#productModal').hidden = true; // close any open modal when switching views
   document.body.style.overflow = '';
 
@@ -1067,6 +1077,12 @@ function renderRoute() {
     case 'confirmation': renderConfirmationView(lastOrder); break;
     case 'reviews': renderReviews(); break;
     default: break;
+  }
+
+  if (pendingScrollRestore) {
+    const restore = pendingScrollRestore;
+    pendingScrollRestore = null;
+    if (restore.view === hash) window.scrollTo({ top: restore.y, left: 0, behavior: 'instant' });
   }
 }
 
@@ -1296,7 +1312,7 @@ function renderAccountOrders(user) {
           </div>
           <div class="order-details-block">
             <h4>Shipping To</h4>
-            <p>${s.shipFullName}<br>${s.shipAddress}<br>${s.shipCity}, ${s.shipState} ${s.shipZip}<br>${s.shipCountry}</p>
+            <p>${shippingToHtml(s, p)}</p>
             <p>${shipMethod}</p>
           </div>
           <div class="order-details-block">
@@ -1349,6 +1365,23 @@ const checkoutData = {
   payment: null,
 };
 
+// "Shipping To" lines for the review step and order history. Orders saved
+// before the address/country fields were removed still show them.
+function shippingToHtml(s, payment) {
+  const p = payment || {};
+  const lines = [s.shipFullName];
+  if (s.shipAddress) lines.push(s.shipAddress);
+  if (s.shipBarangay) {
+    lines.push(`${s.shipBarangay}, ${s.shipCity} ${s.shipZip}`);
+  } else {
+    // orders placed before the Barangay field replaced State / Province
+    if (p.barangay || p.city) lines.push([p.barangay, p.city].filter(Boolean).join(', '));
+    lines.push(`${s.shipCity}, ${s.shipState} ${s.shipZip}`);
+  }
+  if (s.shipCountry) lines.push(s.shipCountry);
+  return lines.join('<br>');
+}
+
 function renderCheckoutEntry() {
   if (validateCartAgainstStock()) {
     toast('Some items in your cart exceeded available stock and were adjusted.', 'error');
@@ -1381,7 +1414,11 @@ function updateShippingOptionPrices() {
 
 function prefillCheckoutForms() {
   const user = getCurrentUser();
-  if (user && !$('#shipFullName').value) $('#shipFullName').value = user.name;
+  if (user && !$('#shipFirstName').value && !$('#shipLastName').value) {
+    const parts = user.name.trim().split(/\s+/);
+    $('#shipLastName').value = parts.length > 1 ? parts.pop() : '';
+    $('#shipFirstName').value = parts.join(' ');
+  }
   if (user && !$('#shipEmail').value) $('#shipEmail').value = user.email;
 }
 
@@ -1415,29 +1452,30 @@ function showCheckoutStep(name) {
 
 function validateShippingForm() {
   const fields = {
-    shipFullName: $('#shipFullName').value.trim(),
+    shipFirstName: $('#shipFirstName').value.trim(),
+    shipLastName: $('#shipLastName').value.trim(),
     shipEmail: $('#shipEmail').value.trim(),
     shipPhone: $('#shipPhone').value.trim(),
-    shipAddress: $('#shipAddress').value.trim(),
     shipCity: $('#shipCity').value.trim(),
-    shipState: $('#shipState').value.trim(),
+    shipBarangay: $('#shipBarangay').value.trim(),
     shipZip: $('#shipZip').value.trim(),
-    shipCountry: $('#shipCountry').value.trim(),
     shippingMethod: $('input[name="shippingMethod"]:checked').value,
   };
   let ok = true;
   Object.keys(fields).forEach((id) => setFieldError(id, ''));
 
-  if (!fields.shipFullName) { setFieldError('shipFullName', 'Full name is required.'); ok = false; }
+  if (!fields.shipFirstName) { setFieldError('shipFirstName', 'First name is required.'); ok = false; }
+  if (!fields.shipLastName) { setFieldError('shipLastName', 'Last name is required.'); ok = false; }
   if (!EMAIL_RE.test(fields.shipEmail)) { setFieldError('shipEmail', 'Enter a valid email address.'); ok = false; }
   if (fields.shipPhone.replace(/\D/g, '').length < 7) { setFieldError('shipPhone', 'Enter a valid phone number.'); ok = false; }
-  if (!fields.shipAddress) { setFieldError('shipAddress', 'Address is required.'); ok = false; }
   if (!fields.shipCity) { setFieldError('shipCity', 'City is required.'); ok = false; }
-  if (!fields.shipState) { setFieldError('shipState', 'State / province is required.'); ok = false; }
+  if (!fields.shipBarangay) { setFieldError('shipBarangay', 'Barangay is required.'); ok = false; }
   if (!fields.shipZip) { setFieldError('shipZip', 'Postal code is required.'); ok = false; }
-  if (!fields.shipCountry) { setFieldError('shipCountry', 'Country is required.'); ok = false; }
 
-  if (ok) checkoutData.shipping = fields;
+  if (ok) {
+    fields.shipFullName = `${fields.shipFirstName} ${fields.shipLastName}`; // kept for review / order records
+    checkoutData.shipping = fields;
+  }
   return ok;
 }
 
@@ -1480,7 +1518,7 @@ function renderReviewStep() {
 
   $('#reviewShipping').innerHTML = `
     <h3>Shipping To</h3>
-    <p>${s.shipFullName}<br>${s.shipAddress}<br>${s.shipCity}, ${s.shipState} ${s.shipZip}<br>${s.shipCountry}</p>
+    <p>${shippingToHtml(s, p)}</p>
     <p>${s.shipEmail} · ${s.shipPhone}</p>
     <p>${shippingMethodLabel}</p>
   `;
@@ -1764,6 +1802,19 @@ function initHeaderAndGlobalEvents() {
       categoriesToggle.setAttribute('aria-expanded', 'false');
       goTo('shop');
     });
+  });
+
+  // Every "Shop" link/button (nav "Shop", "Explore Collection", "Start
+  // Shopping", etc.) shows products from all categories, even if a category
+  // was selected earlier. Category tiles and pills keep their own filtering.
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const link = e.target.closest('a[href="#shop"]');
+    if (!link || link.classList.contains('category-card')) return;
+    e.preventDefault();
+    setCategoryFilter('all');
+    goTo('shop');
   });
 
   // Sort select (Shop view)
@@ -2170,55 +2221,6 @@ function initChimeAudio() {
 }
 
 /* ------------------------------------------------------------
-   SECTION 18: "Follow the Journey" responsive image map
-   The <area> coords are recalculated from each region's percentage
-   bounds (data-rect) against the image's *current rendered* size,
-   so the clickable regions stay lined up at any screen width.
-   ------------------------------------------------------------ */
-function initFollowMap() {
-  const img = $('#followBannerImg');
-  const areas = $$('#followMap area');
-  if (!img || !areas.length) return;
-
-  // The image is shown with object-fit: cover (cropped differently per
-  // breakpoint), so each data-rect (percent of the ORIGINAL image) is mapped
-  // through the same cover scaling/offset the browser applies, then clamped
-  // to the visible box.
-  function updateAreas() {
-    const w = img.clientWidth;
-    const h = img.clientHeight;
-    const nw = img.naturalWidth || w;
-    const nh = img.naturalHeight || h;
-    if (!w || !h) return;
-    const scale = Math.max(w / nw, h / nh);
-    const dispW = nw * scale;
-    const dispH = nh * scale;
-    const offX = (w - dispW) / 2;
-    const offY = (h - dispH) / 2;
-    const clamp = (v, max) => Math.max(0, Math.min(max, Math.round(v)));
-    areas.forEach((area) => {
-      const [x1, y1, x2, y2] = area.dataset.rect.split(',').map(Number);
-      area.coords = [
-        clamp(offX + (x1 / 100) * dispW, w),
-        clamp(offY + (y1 / 100) * dispH, h),
-        clamp(offX + (x2 / 100) * dispW, w),
-        clamp(offY + (y2 / 100) * dispH, h),
-      ].join(',');
-    });
-  }
-
-  if (img.complete) updateAreas();
-  img.addEventListener('load', updateAreas);
-
-  let resizeTimer = null;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(updateAreas, 120);
-  });
-  window.addEventListener('orientationchange', () => setTimeout(updateAreas, 200));
-}
-
-/* ------------------------------------------------------------
    SECTION 19: Bag Care & Storage Guide — expand/collapse toggles
    Each panel (PDF or video) has one toggle button that grows the
    embedded iframe taller and swaps its icon + aria-expanded state.
@@ -2286,6 +2288,434 @@ function initCareVideoPlayback() {
 }
 
 /* ------------------------------------------------------------
+   Homepage "Built for the day you actually have" — interactive bag map.
+   Clicking a bag opens the shop filtered to that bag's category; hovering
+   (or keyboard-focusing) a bag lifts it smoothly. The <area> coordinates
+   are authored for the 1536 x 1024 photo and rescaled to the size it is
+   currently displayed at, so the map works on every screen size.
+   ------------------------------------------------------------ */
+function initLifestyleMap() {
+  const img = $('#lifestyleMapImg');
+  const map = $('#lifestyleBagsMap');
+  if (!img || !map) return;
+  const NATURAL_W = 1536;
+  const areas = Array.from(map.querySelectorAll('area'));
+  areas.forEach((a) => { a.dataset.coords = a.getAttribute('coords'); });
+
+  function scaleAreas() {
+    const ratio = img.clientWidth / NATURAL_W;
+    if (!ratio) return;
+    areas.forEach((a) => {
+      a.setAttribute('coords', a.dataset.coords.split(',').map((n) => Math.round(Number(n) * ratio)).join(','));
+    });
+  }
+  scaleAreas();
+  img.addEventListener('load', scaleAreas);
+  window.addEventListener('resize', scaleAreas);
+  if ('ResizeObserver' in window) new ResizeObserver(scaleAreas).observe(img);
+
+  const setHover = (bag, on) => {
+    const layer = $(`.lifestyle-bag[data-bag="${bag}"]`);
+    if (layer) layer.classList.toggle('is-hovered', on);
+  };
+  areas.forEach((a) => {
+    const bag = a.dataset.bag;
+    a.addEventListener('mouseover', () => setHover(bag, true));
+    a.addEventListener('mouseout', () => setHover(bag, false));
+    a.addEventListener('focus', () => setHover(bag, true));
+    a.addEventListener('blur', () => setHover(bag, false));
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      setHover(bag, false);
+      setCategoryFilter(a.dataset.category);
+      goTo('shop');
+    });
+  });
+  img.addEventListener('mouseleave', () => $$('.lifestyle-bag.is-hovered').forEach((el) => el.classList.remove('is-hovered')));
+}
+
+/* ------------------------------------------------------------
+   SECTION 20: Checkout shipping step — Batangas city + barangay lists
+   Both fields are type-or-pick inputs backed by <datalist>s, so the
+   browser shows matching suggestions as the customer types. Both
+   are required and sit side by side in Shipping Information; for the
+   cities below, the barangay options belong to that city only.
+   ------------------------------------------------------------ */
+const BATANGAS_LOCATIONS = {
+  "Batangas City": [
+    "Alangilan",
+    "Balagtas",
+    "Balete",
+    "Banaba Center",
+    "Banaba Kanluran",
+    "Banaba Silangan",
+    "Banaba Ibaba",
+    "Bilogo",
+    "Maapas",
+    "Bolbok",
+    "Bukal",
+    "Calicanto",
+    "Catandala",
+    "Concepcion",
+    "Conde Itaas",
+    "Conde Labak",
+    "Cuta",
+    "Dalig",
+    "Dela Paz",
+    "Dela Paz Pulot Aplaya",
+    "Dela Paz Pulot Itaas",
+    "Domoclay",
+    "Dumantay",
+    "Gulod Itaas",
+    "Gulod Labak",
+    "Haligue Kanluran",
+    "Haligue Silangan",
+    "Ilihan",
+    "Kumba",
+    "Kumintang Ibaba",
+    "Kumintang Ilaya",
+    "Libjo",
+    "Liponpon (Isla Verde)",
+    "Mahabang Dahilig",
+    "Mahabang Parang",
+    "Mahacot Silangan",
+    "Mahacot Kanluran",
+    "Malalim",
+    "Malibayo",
+    "Malitam",
+    "Maruclap",
+    "Mabacong",
+    "Pagkilatan",
+    "Paharang Kanluran",
+    "Paharang Silangan",
+    "Pallocan Silangan",
+    "Pallocan Kanluran",
+    "Pinamucan",
+    "Pinamucan Ibaba",
+    "Pinamucan Silangan",
+    "Barangay 1",
+    "Barangay 2",
+    "Barangay 3",
+    "Barangay 4",
+    "Barangay 5",
+    "Barangay 6",
+    "Barangay 7",
+    "Barangay 8",
+    "Barangay 9",
+    "Barangay 10",
+    "Barangay 11",
+    "Barangay 12",
+    "Barangay 13",
+    "Barangay 14",
+    "Barangay 15",
+    "Barangay 16",
+    "Barangay 17",
+    "Barangay 18",
+    "Barangay 19",
+    "Barangay 20",
+    "Barangay 21",
+    "Barangay 22",
+    "Barangay 23",
+    "Barangay 24",
+    "Sampaga",
+    "San Agapito (Isla Verde)",
+    "San Agustin Kanluran (Isla Verde)",
+    "San Agustin Silangan (Isla Verde)",
+    "San Andres (Isla Verde)",
+    "San Antonio (Isla Verde)",
+    "San Isidro",
+    "San Jose Sico",
+    "San Miguel",
+    "San Pedro",
+    "Santa Clara",
+    "Santa Rita Aplaya",
+    "Santa Rita Karsada",
+    "Santo Domingo",
+    "Santo Niño",
+    "Simlong",
+    "Sirang Lupa",
+    "Sorosoro Ibaba",
+    "Sorosoro Ilaya",
+    "Sorosoro Karsada",
+    "Tabangao Aplaya",
+    "Tabangao Ambulong",
+    "Tabangao Dao",
+    "Talahib Pandayan",
+    "Talahib Payapa",
+    "Talumpok Kanluran",
+    "Talumpok Silangan",
+    "Tinga Itaas",
+    "Tinga Labak",
+    "Tulo",
+    "Wawa"
+  ],
+  "City of Calaca": [
+    "Bagong Tubig",
+    "Baclas",
+    "Balimbing",
+    "Bambang",
+    "Barangay 1",
+    "Barangay 2",
+    "Barangay 3",
+    "Barangay 4",
+    "Barangay 5",
+    "Barangay 6",
+    "Bisaya",
+    "Cahil",
+    "Caluangan",
+    "Calantas",
+    "Camastilisan",
+    "Coral Ni Lopez",
+    "Coral Ni Bacal",
+    "Dacanlao",
+    "Dila",
+    "Loma",
+    "Lumbang Calzada",
+    "Lumbang Na Bata",
+    "Lumbang Na Matanda",
+    "Madalunot",
+    "Makina",
+    "Matipok",
+    "Munting Coral",
+    "Niyugan",
+    "Pantay",
+    "Puting Bato West",
+    "Puting Kahoy",
+    "Puting Bato East",
+    "Quisumbing",
+    "Salong",
+    "Sinisian",
+    "Taklang Anak",
+    "Talisay",
+    "Tamayo",
+    "Timbain"
+  ],
+  "Lipa City": [
+    "Adya",
+    "Anilao",
+    "Anilao-Labac",
+    "Antipolo Del Norte",
+    "Antipolo Del Sur",
+    "Bagong Pook",
+    "San Sebastian",
+    "Balintawak",
+    "Banaybanay",
+    "Bolbok",
+    "Bugtong na Pulo",
+    "Bulacnin",
+    "Bulaklakan",
+    "Calamias",
+    "Cumba",
+    "Dagatan",
+    "Duhatan",
+    "Halang",
+    "Inosloban",
+    "Kayumanggi",
+    "Latag",
+    "Lodlod",
+    "Lumbang",
+    "Mabini",
+    "Malagonlong",
+    "Malitlit",
+    "Marauoy",
+    "Mataas Na Lupa",
+    "Munting Pulo",
+    "Pagolingin Bata",
+    "Pagolingin East",
+    "Pagolingin West",
+    "Pangao",
+    "Pinagkawitan",
+    "Pinagtongulan",
+    "Plaridel",
+    "Poblacion Barangay 1",
+    "Poblacion Barangay 2",
+    "Poblacion Barangay 3",
+    "Poblacion Barangay 4",
+    "Poblacion Barangay 5",
+    "Poblacion Barangay 6",
+    "Poblacion Barangay 7",
+    "Poblacion Barangay 8",
+    "Poblacion Barangay 9",
+    "Poblacion Barangay 9-A",
+    "Poblacion Barangay 10",
+    "Poblacion Barangay 11",
+    "Barangay 12",
+    "Pusil",
+    "Quezon",
+    "Rizal",
+    "Sabang",
+    "Sampaguita",
+    "San Benito",
+    "San Carlos",
+    "San Celestino",
+    "San Francisco",
+    "San Guillermo",
+    "San Jose",
+    "San Lucas",
+    "San Salvador",
+    "Sapac",
+    "Sico",
+    "Santo Niño",
+    "Santo Toribio",
+    "Talisay",
+    "Tambo",
+    "Tangob",
+    "Tanguay",
+    "Tibig",
+    "Tipacan"
+  ],
+  "City of Santo Tomas": [
+    "Barangay I",
+    "Barangay II",
+    "Barangay III",
+    "Barangay IV",
+    "San Agustin",
+    "San Antonio",
+    "San Bartolome",
+    "San Felix",
+    "San Fernando",
+    "San Francisco",
+    "San Isidro Norte",
+    "San Isidro Sur",
+    "San Joaquin",
+    "San Jose",
+    "San Juan",
+    "San Luis",
+    "San Miguel",
+    "San Pablo",
+    "San Pedro",
+    "San Rafael",
+    "San Roque",
+    "San Vicente",
+    "Santa Ana",
+    "Santa Anastacia",
+    "Santa Clara",
+    "Santa Cruz",
+    "Santa Elena",
+    "Santa Maria",
+    "Santiago",
+    "Santa Teresita"
+  ],
+  "Tanauan City": [
+    "Altura Bata",
+    "Altura Matanda",
+    "Altura-South",
+    "Ambulong",
+    "Banadero",
+    "Bagbag",
+    "Bagumbayan",
+    "Balele",
+    "Banjo East",
+    "Banjo Laurel",
+    "Bilog-bilog",
+    "Boot",
+    "Cale",
+    "Darasa",
+    "Pagaspas",
+    "Gonzales",
+    "Hidalgo",
+    "Janopol",
+    "Janopol Oriental",
+    "Laurel",
+    "Luyos",
+    "Mabini",
+    "Malaking Pulo",
+    "Maria Paz",
+    "Maugat",
+    "Montaña",
+    "Natatas",
+    "Pantay Matanda",
+    "Pantay Bata",
+    "Poblacion Barangay 1",
+    "Poblacion Barangay 2",
+    "Poblacion Barangay 3",
+    "Poblacion Barangay 4",
+    "Poblacion Barangay 5",
+    "Poblacion Barangay 6",
+    "Poblacion Barangay 7",
+    "Sala",
+    "Sambat",
+    "San Jose",
+    "Santol",
+    "Santor",
+    "Sulpoc",
+    "Suplang",
+    "Talaga",
+    "Tinurik",
+    "Trapiche",
+    "Ulango",
+    "Wawa"
+  ]
+};
+
+// Wires one city input + barangay input pair to the lists above.
+function initLocationPicker(opts) {
+  const cityInput = $(`#${opts.cityId}`);
+  const barangayInput = $(`#${opts.barangayId}`);
+  const cityList = $(`#${opts.cityListId}`);
+  const barangayList = $(`#${opts.barangayListId}`);
+  if (!cityInput || !barangayInput || !cityList || !barangayList) return;
+
+  const findCanonical = (list, value) => {
+    const v = value.trim().toLowerCase();
+    return v ? (list.find((name) => name.toLowerCase() === v) || null) : null;
+  };
+  const fillList = (datalist, names) => {
+    datalist.innerHTML = '';
+    names.forEach((name) => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      datalist.appendChild(opt);
+    });
+  };
+
+  const cityNames = Object.keys(BATANGAS_LOCATIONS);
+  fillList(cityList, cityNames);
+
+  // With no listed city chosen yet, the barangay list offers every barangay
+  // (each name once); choosing a city narrows it to that city's barangays.
+  const allBarangays = [];
+  cityNames.forEach((name) => {
+    BATANGAS_LOCATIONS[name].forEach((b) => { if (!allBarangays.includes(b)) allBarangays.push(b); });
+  });
+  fillList(barangayList, allBarangays);
+
+  let activeCity = null;
+  function syncBarangays() {
+    const city = findCanonical(cityNames, cityInput.value);
+    if (city === activeCity) return;
+    activeCity = city;
+    if (city) {
+      fillList(barangayList, BATANGAS_LOCATIONS[city]);
+      // keep an already-chosen barangay only if it belongs to this city
+      if (!findCanonical(BATANGAS_LOCATIONS[city], barangayInput.value)) barangayInput.value = '';
+    } else {
+      fillList(barangayList, allBarangays);
+    }
+  }
+
+  cityInput.addEventListener('input', syncBarangays);
+  cityInput.addEventListener('change', () => {
+    const city = findCanonical(cityNames, cityInput.value);
+    if (city) cityInput.value = city; // keep the exact spelling of the list
+    syncBarangays();
+  });
+  barangayInput.addEventListener('change', () => {
+    const names = activeCity ? BATANGAS_LOCATIONS[activeCity] : allBarangays;
+    const match = findCanonical(names, barangayInput.value);
+    if (match) barangayInput.value = match;
+  });
+}
+
+function initCheckoutLocationPicker() {
+  // Shipping Information: City + Barangay (barangay always visible beside the city)
+  initLocationPicker({
+    cityId: 'shipCity', barangayId: 'shipBarangay',
+    cityListId: 'shipCityList', barangayListId: 'shipBarangayList',
+  });
+}
+
+/* ------------------------------------------------------------
    SECTION 14: Init
    ------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -2298,9 +2728,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletterForm();
   initShippingInfoText();
   initChimeAudio();
-  initFollowMap();
   initCareGuide();
   initCareVideoPlayback();
+  initCheckoutLocationPicker();
+  initLifestyleMap();
   renderHome();
   renderRoute();
 });

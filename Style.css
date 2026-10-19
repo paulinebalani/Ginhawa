@@ -634,6 +634,27 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .lifestyle-media { min-height: 420px; }
 .lifestyle-media img { width: 100%; height: 100%; object-fit: cover; }
 
+/* Interactive bag map: the whole picture is always shown (nothing cropped) so every bag stays clickable */
+.lifestyle-media { display: flex; align-items: center; }
+.lifestyle-media .lifestyle-map { position: relative; width: 100%; aspect-ratio: 3 / 2; line-height: 0; }
+.lifestyle-media .lifestyle-map img.lifestyle-map-img { display: block; width: 100%; height: 100%; max-height: none; object-fit: fill; }
+/* Cut-outs of each bag sit exactly on top of the photo; they are invisible until hovered */
+.lifestyle-media .lifestyle-map img.lifestyle-bag {
+  position: absolute; max-height: none; object-fit: fill; pointer-events: none;
+  opacity: 0; transform: scale(1); transform-origin: 50% 55%;
+  filter: drop-shadow(0 0 0 rgba(40, 20, 5, 0));
+  transition: transform .45s cubic-bezier(.22, .8, .3, 1), opacity .25s ease, filter .45s ease;
+  will-change: transform;
+}
+.lifestyle-media .lifestyle-map img.lifestyle-bag.is-hovered {
+  opacity: 1; transform: scale(1.05); z-index: 2;
+  filter: drop-shadow(0 12px 14px rgba(40, 20, 5, .38));
+}
+@media (prefers-reduced-motion: reduce) {
+  .lifestyle-media .lifestyle-map img.lifestyle-bag { transition: opacity .15s ease; }
+  .lifestyle-media .lifestyle-map img.lifestyle-bag.is-hovered { transform: none; }
+}
+
 .lifestyle-copy {
   align-self: center;
   padding: 36px;
@@ -658,7 +679,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .footer-brand { font-family: var(--font-display); font-weight: 600; font-size: 24px; }
 .footer-tagline { font-size: 17px; color: var(--color-ink-soft); margin: 8px 0 12px; max-width: 32ch; }
-.footer-socials { display: flex; gap: 4px; margin-left: -8px; }
+.footer-socials { display: flex; gap: 4px; margin-left: -9px; }
+.footer-socials .icon-btn { width: 46px; height: 46px; }
+.footer-socials .icon-btn svg { width: 24px; height: 24px; }
 
 .footer-col h3 { font-family: var(--font-body); font-size: 17px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; margin: 0 0 14px; color: var(--color-ink); }
 .footer-col ul { display: flex; flex-direction: column; gap: 8px; }
@@ -1557,7 +1580,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .star-input.is-filled { color: var(--color-leather); }
 
 .file-input { width: 100%; font-size: 17px; color: var(--color-ink-soft); }
+/* Hide the browser's "No file chosen" / file-name text; the button stays and the photo preview shows the choice */
+input[type="file"].file-input { color: transparent; }
+input[type="file"].file-input::file-selector-button { color: var(--color-ink); }
 .review-image-preview { position: relative; display: inline-block; margin-top: 10px; }
+.review-image-preview[hidden] { display: none; }
 .review-image-preview img { width: 96px; height: 96px; object-fit: cover; border-radius: var(--radius-sm); }
 .review-image-preview button {
   position: absolute;
@@ -1874,55 +1901,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 /* -------------------------------------------------------------
-   SECTION: "Follow the Journey" image map banner
-   ------------------------------------------------------------- */
-.follow-banner { padding-bottom: 8px; }
-.follow-map-wrap {
-  position: relative;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 18px;
-}
-.follow-map-img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 6;
-  object-fit: cover;
-  border-radius: var(--radius-md);
-}
-.follow-map-labels {
-  position: absolute;
-  top: 0; left: 24px; right: 24px; bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  pointer-events: none;
-}
-.follow-map-label {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 12px;
-}
-.follow-map-label svg {
-  width: 26px; height: 26px;
-  padding: 8px;
-  border-radius: 50%;
-  background: rgba(28, 22, 18, .55);
-  color: #fff;
-  backdrop-filter: blur(2px);
-  transition: transform .2s var(--ease);
-}
-.follow-map-wrap:hover .follow-map-label svg { transform: translateY(-2px); }
-.follow-map-caption {
-  max-width: var(--max-width);
-  margin: 12px auto 0;
-  padding: 0 18px;
-  font-size: 17px;
-  color: var(--color-ink-soft);
-  text-align: center;
-}
-
-/* -------------------------------------------------------------
    SECTION: Responsive adjustments for the app views
    ------------------------------------------------------------- */
 @media (max-width: 900px) {
@@ -1937,7 +1915,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .care-guide-media { grid-template-columns: 1fr; }
   .care-guide-frame { height: 300px; }
   .care-guide-item.is-expanded .care-guide-frame { height: 480px; }
-  .follow-map-img { aspect-ratio: 16 / 9; }
 }
 
 @media (max-width: 640px) {
@@ -1952,8 +1929,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .features-list { grid-template-columns: 1fr; }
   .glossary-list { grid-auto-flow: row; grid-template-columns: 1fr; grid-template-rows: none; gap: 16px; }
   .ruby-feature-row { gap: 12px 14px; }
-  .follow-map-img { aspect-ratio: 4 / 5; }
-  .follow-map-label svg { width: 22px; height: 22px; padding: 7px; }
 
   /* Comparison table: convert rows into stacked label/value cards */
   .compare-table-wrap { overflow-x: visible; }
@@ -2063,7 +2038,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @media (max-width: 900px) {
   .category-card img { object-fit: contain; }
   .about-media img { aspect-ratio: auto; height: auto; max-height: 75vh; object-fit: contain; }
-  .follow-map-img { aspect-ratio: auto; height: auto; }   /* natural ratio; hotspots are still mapped by initFollowMap() */
   .lifestyle-media img { object-fit: contain; }
 }
 @media (max-width: 768px) {
