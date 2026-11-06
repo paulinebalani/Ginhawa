@@ -932,18 +932,6 @@ function renderModalBody() {
       <p class="modal-price">${p.was ? `<span class="was">${formatPrice(p.was)}</span>` : ''}${formatPrice(p.price)}</p>
       <p class="modal-stock ${stockClass}">${stockMsg}</p>
       <p class="modal-description">${p.description}</p>
-      <div class="modal-option-group">
-        <span>Color — ${modalState.color}</span>
-        <div class="option-radio-list" id="modalColors" role="radiogroup" aria-label="Color">
-          ${p.colors.map((c) => `
-            <label class="option-radio ${c.name === modalState.color ? 'is-active' : ''}">
-              <input type="radio" name="modalColor" value="${c.name}" ${c.name === modalState.color ? 'checked' : ''} />
-              <span class="option-radio-swatch" style="background:${c.hex}" aria-hidden="true"></span>
-              <span class="option-radio-label">${c.name}</span>
-            </label>
-          `).join('')}
-        </div>
-      </div>
       <div class="modal-option-group modal-dimensions-group">
         <span>Dimensions</span>
         <p class="modal-dimensions" id="modalDimensions">${formatDimensions(p.dimensions)}</p>
@@ -963,13 +951,6 @@ function renderModalBody() {
       </div>
     </div>
   `;
-
-  $('#modalColors', body).addEventListener('change', (e) => {
-    const input = e.target.closest('input[name="modalColor"]');
-    if (!input) return;
-    modalState.color = input.value;
-    renderModalBody();
-  });
 
   const qtyInput = $('#modalQtyInput', body);
   const maxQty = Math.max(p.stock, 1);
